@@ -35,7 +35,4 @@ public class Triple<First,Middle,Last> {
 	public void setLast(Last last) {
 		this.last = last;
 	}
-	
-	
-
 }
