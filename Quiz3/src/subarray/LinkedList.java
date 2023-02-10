@@ -22,7 +22,7 @@ public class LinkedList {
 	Node head;
 	
 	//Constructor that converts an int array to a LinkedList
-	LinkedList(int[] nums) {
+	public LinkedList(int[] nums) {
 		for(int i: nums) {
 			insert(i);
 		}
