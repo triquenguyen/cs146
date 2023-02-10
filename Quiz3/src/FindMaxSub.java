@@ -13,7 +13,6 @@ public class FindMaxSub {
 	
 	public static int[] findMaximumSubArray(int[] nums){
 		return new int[0];
-		
 	}
 
 }
