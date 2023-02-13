@@ -25,6 +25,7 @@ public class MergeSorterTest {
 		assertArrayEquals(sorted,nums);
 	}
 
+	//My Test
 	@Test 
 	public void testOneElement() {
 		int[] nums = new int[]{1};
