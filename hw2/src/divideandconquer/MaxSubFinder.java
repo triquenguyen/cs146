@@ -4,7 +4,9 @@ import divideandconquer.Triple;
 import divideandconquer.LinkedList.*;
 
 public class MaxSubFinder {
-
+    /*
+     * Max Subarray Methods for Array
+     */
     private static Triple<Integer, Integer, Integer> findMaxSubarray(int[] arr, int low, int high) {
         // return the same element for one element array
         if (high == low) {
@@ -31,44 +33,43 @@ public class MaxSubFinder {
     }
 
     private static Triple<Integer, Integer, Integer> findMaxCrossingArray(int[] arr, int low, int mid, int high) {
-        // Initialize leftSum to min value
-        int leftSum = Integer.MIN_VALUE;
-        int sum = 0, maxlLeft = 0, maxRight = 0;
-
-        // Getting the sum of left half
+        int leftSum = Integer.MIN_VALUE;            // Initialize leftSum to min value
+        int sum = 0, maxLeft = 0, maxRight = 0;
+        
         for (int i = mid; i >= low; i--) {
-            sum += arr[i];
+            sum += arr[i];                          // Getting the sum of left half
+            //Find the max sum in the left half
             if (sum > leftSum) {
                 leftSum = sum;
-                maxlLeft = i;
+                maxLeft = i;
             }
         }
 
-        // Initialize leftSum to min value
-        int rightSum = Integer.MIN_VALUE;
+        int rightSum = Integer.MIN_VALUE;           // Initialize leftSum to min value
         sum = 0;
-
-        // Getting the sum of right half
-        for (int j = mid + 1; j <= high; j++) {
-            sum += arr[j];
+        
+        for (int j = mid + 1; j <= high; j++) {    
+            sum += arr[j];                          // Getting the sum of right half
+            //Get the max sum in the left half
             if (sum > rightSum) {
                 rightSum = sum;
                 maxRight = j;
             }
         }
-
-        return new Triple<Integer,Integer,Integer>(maxlLeft, maxRight, leftSum + rightSum);
+        return new Triple<Integer,Integer,Integer>(maxLeft, maxRight, leftSum + rightSum);
     }
 
+    /*
+     * Max Subarray Methods for LinkedList
+     */
     private static Triple<Node, Node, Integer> findMaxSubList(LinkedList list, Node low, Node high) {
         if (high == low) {
             return new Triple<Node,Node,Integer>(low, high, low.data);
         } else {
             Node mid = list.middle(low, high);
-
             Triple<Node, Node, Integer> left = findMaxSubList(list, low, mid);
             Triple<Node, Node, Integer> right = findMaxSubList(list, mid.next, high);
-            Triple<Node, Node, Integer> cross = findMaxCrossing(list, low, mid, high);
+            Triple<Node, Node, Integer> cross = findMaxCrossingList(list, low, mid, high);
 
             if (left.getLast() >= right.getLast() && left.getLast() >= cross.getLast()) {
                 return left;
@@ -81,10 +82,37 @@ public class MaxSubFinder {
     }
 
     private static Triple<Node, Node, Integer> findMaxCrossingList(LinkedList list, Node low, Node mid, Node high) {
-         // Initialize leftSum to min value
-         int leftSum = Integer.MIN_VALUE;
-         int sum = 0, maxlLeft = 0, maxRight = 0;
-         
+        // Initialize leftSum to min value
+        int leftSum = Integer.MIN_VALUE;
+        int sum = 0;
+        Node maxLeft, maxRight;
+        LinkedList leftList = list.subList(low, mid);
+        Node leftTail = leftList.tail;
+        Node leftHead = leftList.head;
+        
+        while (leftTail != leftHead) {
+            sum += leftTail.data;
+            if (sum > leftSum) {
+                leftSum = sum;
+                maxLeft = leftTail;
+            }
+            leftTail = leftTail.prev;
+        }
+
+        int rightSum = Integer.MIN_VALUE;
+        sum = 0;
+        LinkedList rightList = list.subList(mid.next, high);
+        Node rightTail = rightList.tail;
+        Node rightHead = rightList.head;
+        while (rightHead != rightTail) {
+            sum += rightHead.data;
+            if (sum > rightSum) {
+                rightSum = sum;
+                maxRight = rightHead;
+            }
+            rightHead = rightHead.next;
+        }
+        return new Triple<Node,Node,Integer>(maxLeft, maxRight, leftSum + rightSum);
     }
 
     public static Triple<Integer,Integer,Integer> getMaxSubarray(int[] arr) {
@@ -92,6 +120,6 @@ public class MaxSubFinder {
     }
 
     public static Triple<Node,Node,Integer> getMaxSubList(LinkedList list) {
-        return null;
+        return findMaxSubList(list, list.head, list.tail);
     }
 }
