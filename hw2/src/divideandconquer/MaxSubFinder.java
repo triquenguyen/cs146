@@ -63,14 +63,19 @@ public class MaxSubFinder {
      * Max Subarray Methods for LinkedList
      */
     private static Triple<Node, Node, Integer> findMaxSubList(LinkedList list, Node low, Node high) {
+        // return the same element for one element list
         if (high == low) {
             return new Triple<Node,Node,Integer>(low, high, low.data);
         } else {
+            // Getting midpoint using middle method
             Node mid = list.middle(low, high);
+            // recursively find max sublist in left and right half
             Triple<Node, Node, Integer> left = findMaxSubList(list, low, mid);
             Triple<Node, Node, Integer> right = findMaxSubList(list, mid.next, high);
+            // find max sublist crossing the midpoint
             Triple<Node, Node, Integer> cross = findMaxCrossingList(list, low, mid, high);
 
+            // respectively check and return the max sublist
             if (left.getLast() >= right.getLast() && left.getLast() >= cross.getLast()) {
                 return left;
             } else if (right.getLast() >= left.getLast() && right.getLast() >= cross.getLast()) {
@@ -82,14 +87,13 @@ public class MaxSubFinder {
     }
 
     private static Triple<Node, Node, Integer> findMaxCrossingList(LinkedList list, Node low, Node mid, Node high) {
-        // Initialize leftSum to min value
-        int leftSum = Integer.MIN_VALUE;
+        int leftSum = Integer.MIN_VALUE;                // Initialize leftSum to min value
         int sum = 0;
-        LinkedList leftList = list.subList(low, mid);
-        Node leftTail = leftList.tail;
-        Node leftHead = leftList.head;
-        Node maxLeft = leftTail;
-        
+        LinkedList leftList = list.subList(low, mid);   // Getting the left half of the list
+        Node leftTail = leftList.tail;                  // Getting the tail of the left half
+        Node leftHead = leftList.head;                  // Getting the head of the left half
+        Node maxLeft = leftTail;                        // Initialize maxLeft to the tail of the left half
+        //Find the max sum in the left half
         while (leftTail != leftHead) {
             sum += leftTail.data;
             if (sum > leftSum) {
@@ -101,11 +105,11 @@ public class MaxSubFinder {
 
         int rightSum = Integer.MIN_VALUE;
         sum = 0;
-        LinkedList rightList = list.subList(mid.next, high);
+        LinkedList rightList = list.subList(mid.next, high);    // Getting the right half of the list
         Node rightTail = rightList.tail;
         Node rightHead = rightList.head;
         Node maxRight = rightHead;
-        
+        //Find the max sum in the left half
         while (rightHead != rightTail) {
             sum += rightHead.data;
             if (sum > rightSum) {

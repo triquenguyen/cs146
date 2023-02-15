@@ -47,7 +47,8 @@ public class MergeSorter {
         int leftIndex = 0;
         int rightIndex = 0;
 
-        for (int mergeIndex = start; mergeIndex < end; mergeIndex++) {
+        //Compare the left and right array and merge them back into the original array
+        for (int mergeIndex = start; mergeIndex <= end; mergeIndex++) {
             if (left[leftIndex] <= right[rightIndex]) {
                 arr[mergeIndex] = left[leftIndex];
                 leftIndex++;
@@ -56,34 +57,11 @@ public class MergeSorter {
                 rightIndex++;
             }
         }
-        
-        // while (leftIndex < leftSize && rightIndex < rightSize) {
-        //     if (left[leftIndex] <= right[rightIndex]) {
-        //         arr[mergeIndex] = left[leftIndex];
-        //         leftIndex++;
-        //     } else {
-        //         arr[mergeIndex] = right[rightIndex];
-        //         rightIndex++;
-        //     }
-        //     mergeIndex++;
-        // }
-
-        // while (leftIndex < leftSize) {
-        //     arr[mergeIndex] = left[leftIndex];
-        //     leftIndex++;
-        //     mergeIndex++;
-        // }
-
-        // while (rightIndex < rightSize) {
-        //     arr[mergeIndex] = right[rightIndex];
-        //     rightIndex++;
-        //     mergeIndex++;
-        // }
     }
 
     public static void main(String[] args) throws Exception {
         MergeSorter sorter = new MergeSorter();
-        int arr[] = {1, 3, 5, 2, 0, 6};
+        int arr[] = {};
         sorter.mergeSort(arr, 0, arr.length - 1);
         for (int i = 0; i < arr.length; i++) {
              System.out.print(arr[i] + " ");
