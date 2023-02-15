@@ -27,28 +27,27 @@ public class MergeSorter {
         int rightSize = end - mid;
 
         // Split the array into left and right halves
-        int[] left = new int[leftSize];
-        int[] right = new int[rightSize];
+        int[] left = new int[leftSize+1];
+        int[] right = new int[rightSize+1];
 
-        // Getting the left side
+        // Getting the left side array
         for (int leftIndex = 0; leftIndex < leftSize; leftIndex++) {
             left[leftIndex] = arr[start + leftIndex];
         }
 
-        // Getting the right side
+        // Getting the right side array
         for (int rightIndex = 0; rightIndex < rightSize; rightIndex++) {
             right[rightIndex] = arr[mid + rightIndex + 1];
         }
 
-        // left[leftSize] = MAX;
-        // right[rightSize] = MAX;
+        left[leftSize] = MAX;
+        right[rightSize] = MAX;
 
         // Initialize the index of each array
         int leftIndex = 0;
         int rightIndex = 0;
-        int mergeIndex = start;
-        
-        while (leftIndex < leftSize && rightIndex < rightSize) {
+
+        for (int mergeIndex = start; mergeIndex < end; mergeIndex++) {
             if (left[leftIndex] <= right[rightIndex]) {
                 arr[mergeIndex] = left[leftIndex];
                 leftIndex++;
@@ -56,22 +55,9 @@ public class MergeSorter {
                 arr[mergeIndex] = right[rightIndex];
                 rightIndex++;
             }
-            mergeIndex++;
         }
-
-        while (leftIndex < leftSize) {
-            arr[mergeIndex] = left[leftIndex];
-            leftIndex++;
-            mergeIndex++;
-        }
-
-        while (rightIndex < rightSize) {
-            arr[mergeIndex] = right[rightIndex];
-            rightIndex++;
-            mergeIndex++;
-        }
-
-        // for (int mergeIndex = start; mergeIndex < end; mergeIndex++) {
+        
+        // while (leftIndex < leftSize && rightIndex < rightSize) {
         //     if (left[leftIndex] <= right[rightIndex]) {
         //         arr[mergeIndex] = left[leftIndex];
         //         leftIndex++;
@@ -79,6 +65,28 @@ public class MergeSorter {
         //         arr[mergeIndex] = right[rightIndex];
         //         rightIndex++;
         //     }
+        //     mergeIndex++;
         // }
+
+        // while (leftIndex < leftSize) {
+        //     arr[mergeIndex] = left[leftIndex];
+        //     leftIndex++;
+        //     mergeIndex++;
+        // }
+
+        // while (rightIndex < rightSize) {
+        //     arr[mergeIndex] = right[rightIndex];
+        //     rightIndex++;
+        //     mergeIndex++;
+        // }
+    }
+
+    public static void main(String[] args) throws Exception {
+        MergeSorter sorter = new MergeSorter();
+        int arr[] = {1, 3, 5, 2, 0, 6};
+        sorter.mergeSort(arr, 0, arr.length - 1);
+        for (int i = 0; i < arr.length; i++) {
+             System.out.print(arr[i] + " ");
+        }           
     }
 }

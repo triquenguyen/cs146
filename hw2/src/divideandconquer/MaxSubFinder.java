@@ -85,10 +85,10 @@ public class MaxSubFinder {
         // Initialize leftSum to min value
         int leftSum = Integer.MIN_VALUE;
         int sum = 0;
-        Node maxLeft, maxRight;
         LinkedList leftList = list.subList(low, mid);
         Node leftTail = leftList.tail;
         Node leftHead = leftList.head;
+        Node maxLeft = leftTail;
         
         while (leftTail != leftHead) {
             sum += leftTail.data;
@@ -104,6 +104,8 @@ public class MaxSubFinder {
         LinkedList rightList = list.subList(mid.next, high);
         Node rightTail = rightList.tail;
         Node rightHead = rightList.head;
+        Node maxRight = rightHead;
+        
         while (rightHead != rightTail) {
             sum += rightHead.data;
             if (sum > rightSum) {
