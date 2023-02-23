@@ -45,12 +45,12 @@ public class MaxSubFinder {
             }
         }
 
-        int rightSum = Integer.MIN_VALUE;           // Initialize leftSum to min value
+        int rightSum = Integer.MIN_VALUE;           // Initialize rightSum to min value
         sum = 0;
         
         for (int j = mid + 1; j <= high; j++) {    
             sum += arr[j];                          // Getting the sum of right half
-            //Get the max sum in the left half
+            //Find the max sum in the left half
             if (sum > rightSum) {
                 rightSum = sum;
                 maxRight = j;
@@ -93,26 +93,28 @@ public class MaxSubFinder {
         Node leftTail = leftList.tail;                  // Getting the tail of the left half
         Node leftHead = leftList.head;                  // Getting the head of the left half
         Node maxLeft = leftTail;                        // Initialize maxLeft to the tail of the left half
-        //Find the max sum in the left half
+        
         while (leftTail != leftHead) {
-            sum += leftTail.data;
-            if (sum > leftSum) {
+            sum += leftTail.data;                       // Getting the sum of left half
+            //Find the max sum in the left half
+            if (sum > leftSum) {                        
                 leftSum = sum;
                 maxLeft = leftTail;
             }
             leftTail = leftTail.prev;
         }
 
-        int rightSum = Integer.MIN_VALUE;
+        int rightSum = Integer.MIN_VALUE;               // Initialize rightSum to min value
         sum = 0;
         LinkedList rightList = list.subList(mid.next, high);    // Getting the right half of the list
         Node rightTail = rightList.tail;
         Node rightHead = rightList.head;
         Node maxRight = rightHead;
-        //Find the max sum in the left half
+        
         while (rightHead != rightTail) {
-            sum += rightHead.data;
-            if (sum > rightSum) {
+            sum += rightHead.data;                      // Getting the sum of right half
+            //Find the max sum in the right half
+            if (sum > rightSum) {                         
                 rightSum = sum;
                 maxRight = rightHead;
             }
