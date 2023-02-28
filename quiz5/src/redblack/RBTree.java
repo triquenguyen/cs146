@@ -84,13 +84,12 @@ public class RBTree {
 		// Loop through the tree to look for the inserting position for node z
 		while (x != null) {
 			y = x;
-			// x = (z.data < x.data) ? x.left : x.right; // Go to the left subtree when z is
-			// smaller than the parent node, work
-			// the same with right subtree
-			if (z.data < x.data) {
+			if (z.data < x.data) {	// Go to the left subtree when z is smaller than the parent node, work the same with right subtree
 				x = x.left;
-			} else {
+			} else if (z.data > x.data) {
 				x = x.right;
+			} else {
+				return;
 			}
 		}
 		z.parent = y; // z becomes y children when we found a place to insert z
@@ -184,12 +183,14 @@ public class RBTree {
 		testTree.insert(2);
 		testTree.insert(1);
 		testTree.insert(3);
+		testTree.insert(3);
 		testTree.insert(0);
 		testTree.insert(5);
 		testTree.insert(22);
 		testTree.insert(6);
 		testTree.insert(9);
 		testTree.insert(10);
+		
 		String result = testTree.toString();
 		System.out.println(result);
 	}
