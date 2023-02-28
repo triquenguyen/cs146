@@ -111,7 +111,7 @@ public class RBTree {
 			if (z.parent == z.parent.parent.left) {
 				Node y = z.parent.parent.right; // Ancle node
 				// Swapping color of grandparent and parent's node
-				if (y.parent != null && y.color == Color.RED) { // Fixing case 1: The grandparent node is red
+				if (y != null && y.color == Color.RED) { // Fixing case 1: The grandparent node is red
 					z.parent.color = Color.BLACK;
 					y.color = Color.BLACK;
 					z.parent.parent.color = Color.RED;
@@ -126,8 +126,8 @@ public class RBTree {
 				}
 				// Parent is a right child case
 			} else {
-				Node y = z.parent.parent.right;
-				if (y.parent != null && y.color == Color.RED) {
+				Node y = z.parent.parent.left;
+				if (y != null && y.color == Color.RED) {
 					z.parent.color = Color.BLACK;
 					y.color = Color.BLACK;
 					z.parent.parent.color = Color.RED;
@@ -187,6 +187,9 @@ public class RBTree {
 		testTree.insert(0);
 		testTree.insert(5);
 		testTree.insert(22);
+		testTree.insert(6);
+		testTree.insert(9);
+		testTree.insert(10);
 		String result = testTree.toString();
 		System.out.println(result);
 	}
