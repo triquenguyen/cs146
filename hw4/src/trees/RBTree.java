@@ -56,7 +56,7 @@ public class RBTree {
 		if (currNode == null) {
 			return 0;
 		} else {
-			return getHeight(currNode) - 1;
+			return getHeight(currNode);
 		}
 	}
 
@@ -64,36 +64,37 @@ public class RBTree {
 		Node currNode = root;
 		if (currNode == null) {
 			return 0;
-		} else {
+		} else if (currNode.color == Color.BLACK) {
 			return getBlackHeight(currNode);
+		} else {
+			return 0;
 		}
 	}
 
 	public static int getHeight(Node currNode) {
-		if (currNode == null) {
+		int leftHeight, rightHeight = 1;
+		if (currNode == NIL) {
 			return 0;
 		} else {
-			int leftHeight = getHeight(currNode.left);
-			int rightHeight = getHeight(currNode.right);
-			return Math.max(leftHeight, rightHeight) + 1;
+			leftHeight = getHeight(currNode.left);
+			rightHeight = getHeight(currNode.right);
+			return Math.max(leftHeight, rightHeight)+1;
 		}
 	}
 
 	public int getBlackHeight(Node currNode) {
-		if (currNode == null) {
+		int leftHeight, rightHeight = 1;
+		if (currNode == NIL) {
 			return 0;
-		} else if (currNode.color == Color.BLACK) {
-			int leftHeight = getHeight(currNode.left);
-			int rightHeight = getHeight(currNode.right);
-			return Math.max(leftHeight, rightHeight) + 1;
+		} else {
+			leftHeight = getHeight(currNode.left);
+			rightHeight = getHeight(currNode.right);
+			return Math.max(leftHeight, rightHeight)+1;
 		}
-		return 0;
 	}
 
 	public boolean insert(int i) {
 		Node newNode = new Node(i, Color.RED);
-		System.out.println(i);
-
 		if (root == null) {
 			root = newNode;
 			root.color = Color.BLACK;
@@ -338,52 +339,91 @@ public class RBTree {
 
 		public Node next() {
 			Node currNode = this.stackNode.pop();
-			if (currNode.left != NIL) {
-				this.stackNode.push(currNode.left);
-			}
 			if (currNode.right != NIL) {
 				this.stackNode.push(currNode.right);
 			}
-			
+			if (currNode.left != NIL) {
+				this.stackNode.push(currNode.left);
+			}
+
 			return currNode;
 		}
 
 	}
 
 	public class RBTreePostOrderIterator implements Iterator<Node> {
-		Node root;
+		Stack<Node> stackNode = new Stack<>();
 
 		public RBTreePostOrderIterator(Node root) {
-			this.root = root;
+			if (root != NIL) {
+				this.stackNode.push(root);
+				getSubtree(root.right);
+				getSubtree(root.left);
+			}
+			
+		}
+
+		public void getSubtree(Node node) {
+			while (node != NIL) {
+				this.stackNode.push(node);
+				if (node != NIL) {
+					node = node.left;
+				} else {
+					node = node.right;
+				}
+			}
 		}
 
 		public boolean hasNext() {
-			return false;
+			return stackNode.size() > 0;
 		}
 
 		public Node next() {
-			return null;
+			Node currNode = stackNode.pop();
+			if (stackNode.size() > 0 && currNode == this.stackNode.peek().left) {
+				getSubtree(this.stackNode.peek().right);
+			}
+			return currNode;
 		}
 	}
 
 	public static void main(String[] args) {
 		RBTree testTree = new RBTree();
-		testTree.insert(0);
 		testTree.insert(2);
-		testTree.insert(8);
-		testTree.insert(100);
+		testTree.insert(1);
+		testTree.insert(3);
+		testTree.insert(3);
+		testTree.insert(0);
+		testTree.insert(5);
 		testTree.insert(22);
-		testTree.insert(1000);
-		testTree.insert(600);
-		testTree.insert(-191);
-		testTree.insert(4);
+		testTree.insert(6);
+		testTree.insert(9);
+		testTree.insert(10);
 
 		System.out.println(testTree.toString());
-		ArrayList<Node> preorder = testTree.preOrder();
-		System.out.println(testTree.height());
-		for (Node node : preorder) {
-			System.out.print(node.data + " ");
-		}
+		System.out.println("Height: " + testTree.height());
+		System.out.println("Black height: " + testTree.blackHeight());
+
+		// System.out.print("Inorder: ");
+		// ArrayList<Node> inorder = testTree.inOrder();
+		// for (Node node : inorder) {
+		// 	System.out.print(node.data + " ");
+		// }
+		// System.out.println();
+
+		// ArrayList<Node> preorder = testTree.preOrder();
+		// System.out.print("Preoder: ");
+		// for (Node node : preorder) {
+		// 	System.out.print(node.data + " ");
+		// }
+		// System.out.println();
+
+		// ArrayList<Node> postorder = testTree.postOrder();
+		// System.out.print("Postorder: ");
+		// for (Node node : postorder) {
+		// 	System.out.print(node.data + " ");
+		// }
+		// System.out.println();
 		
 
 		// {(0,RED),(1,BLACK),(2,RED),(3,BLACK),(5,BLACK),(6,BLACK),(9,RED),(10,RED),(22,BLACK)}
