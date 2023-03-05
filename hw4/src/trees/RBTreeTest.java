@@ -40,23 +40,19 @@ public class RBTreeTest {
 		assertEquals(Color.BLACK,n.color);
 	}
 	
-	// @Test
-	// public void testInsert1() {
-	// 	RBTree test = new RBTree();
-	// 	test.insert(1);
-	// 	test.insert(0);
-	// 	test.insert(2);
-	// 	ArrayList<Integer> actual = new ArrayList<>();
-	// 	for(Node n: test.inOrder())
-	// 		actual.add(n.data);
+	@Test
+	public void testInsert1() {
+		RBTree test = new RBTree();
+		test.insert(1);
+		test.insert(0);
+		test.insert(2);
+		ArrayList<Integer> actual = new ArrayList<>();
+		for(Node n: test.inOrder())
+			actual.add(n.data);
 		
-	// 	ArrayList<Integer> expected = new ArrayList<>();
-	// 	for(int i=0;i<3;i++)
-	// 		expected.add(i);
-	// 	assertEquals(expected,actual);
-		
-		
-		
+		ArrayList<Integer> expected = new ArrayList<>();
+		for(int i=0;i<3;i++)
+			expected.add(i);
+		assertEquals(expected,actual);
 	}
-
 }

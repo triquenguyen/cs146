@@ -2,7 +2,13 @@ package trees;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.NoSuchElementException;
+import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Stack;
+
+import javax.xml.namespace.QName;
 
 public class RBTree {
 
@@ -46,17 +52,47 @@ public class RBTree {
 	static final Node NIL = new Node(Color.BLACK);
 
 	public int height() {
-		int height = 0;
-
-		return height;
+		Node currNode = root;
+		if (currNode == null) {
+			return 0;
+		} else {
+			return getHeight(currNode) - 1;
+		}
 	}
 
 	public int blackHeight() {
+		Node currNode = root;
+		if (currNode == null) {
+			return 0;
+		} else {
+			return getBlackHeight(currNode);
+		}
+	}
+
+	public static int getHeight(Node currNode) {
+		if (currNode == null) {
+			return 0;
+		} else {
+			int leftHeight = getHeight(currNode.left);
+			int rightHeight = getHeight(currNode.right);
+			return Math.max(leftHeight, rightHeight) + 1;
+		}
+	}
+
+	public int getBlackHeight(Node currNode) {
+		if (currNode == null) {
+			return 0;
+		} else if (currNode.color == Color.BLACK) {
+			int leftHeight = getHeight(currNode.left);
+			int rightHeight = getHeight(currNode.right);
+			return Math.max(leftHeight, rightHeight) + 1;
+		}
 		return 0;
 	}
 
 	public boolean insert(int i) {
 		Node newNode = new Node(i, Color.RED);
+		System.out.println(i);
 
 		if (root == null) {
 			root = newNode;
@@ -70,30 +106,7 @@ public class RBTree {
 
 			// Iterate through the tree and find the suitable place for the newNode
 			while (currNode != NIL) {
-				Node leftChild = currNode.left;
-				Node rightChild = currNode.right;
-				if (currNode.color == Color.BLACK &&
-						leftChild.color == Color.RED &&
-						rightChild.color == Color.RED) {
-					fixUp(currNode);
-				} else if (currNode.color == Color.RED && ancestors.size() > 1 && ancestors.peek().color == Color.RED) {
-					Node parent = ancestors.pop();
-					Node grandparent = ancestors.pop();
-
-					if (currNode == parent.left && parent == grandparent.left) {
-						System.out.println("Single Rotation on Left Child");
-						singleRotationLeftChild(parent, grandparent, ancestors);
-					} else if (currNode == parent.right && parent == grandparent.right) {
-						System.out.println("Single Rotation on Right Child");
-						singleRotationRightChild(parent, grandparent, ancestors);
-					} else if (currNode == parent.right && parent == grandparent.left) {
-						System.out.println("Double Rotation on Left Child");
-						doubleRotationLeftChild(currNode, parent, grandparent, ancestors);
-					} else if (currNode == parent.left && parent == grandparent.right) {
-						System.out.println("Double Rotation on Right Child");
-						doubleRotationRightChild(currNode, parent, grandparent, ancestors);
-					}
-				}
+				plsFixMe(currNode, ancestors);
 
 				if (i < currNode.data) {
 					ancestors.push(currNode);
@@ -115,53 +128,90 @@ public class RBTree {
 			newNode.right = NIL;
 			newNode.left = NIL;
 
+			currNode = newNode;
+			plsFixMe(currNode, ancestors);
+			ancestors.push(currNode);
+
 			root.color = Color.BLACK;
 		}
 		return true;
 	}
 
+	void plsFixMe(Node currNode, Stack<Node> ancestors) {
+		Node leftChild = currNode.left;
+		Node rightChild = currNode.right;
+		if (currNode.color == Color.BLACK &&
+				leftChild.color == Color.RED &&
+				rightChild.color == Color.RED) {
+			fixUp(currNode);
+		}
+		if (currNode.color == Color.RED && ancestors.size() > 1 && ancestors.peek().color == Color.RED) {
+			Node p = ancestors.pop();
+			Node g = ancestors.pop();
+
+			if (currNode == p.left && p == g.left) {
+				singleRotationLeftChild(p, g, ancestors);
+			} else if (currNode == p.right && p == g.right) {
+				singleRotationRightChild(p, g, ancestors);
+			} else if (currNode == p.right && p == g.left) {
+				doubleRotationLeftChild(currNode, p, g, ancestors);
+			} else if (currNode == p.left && p == g.right) {
+				doubleRotationRightChild(currNode, p, g, ancestors);
+			}
+
+			ancestors.push(p);
+			ancestors.push(g);
+		}
+	}
+
 	void singleRotationLeftChild(Node p, Node g, Stack<Node> ancestors) {
 		g.left = p.right;
 		p.right = g;
-		Node ancestor = ancestors.peek();
+		Node ancestor = null;
+
 		if (g == root) {
 			root = p;
-		} else if (g == ancestor.left) {
-			ancestor.left = p;
 		} else {
-			ancestor.right = p;
+			ancestor = ancestors.peek();
 		}
-		
-		// Color temp = p.color;
-		// p.color = g.color;
-		// g.color = temp;
+
+		if (ancestor != null) {
+			if (p.data < ancestor.data) {
+				ancestor.left = p;
+			} else {
+				ancestor.right = p;
+			}
+		} else {
+			root = p;
+		}
 
 		p.color = Color.BLACK;
 		g.color = Color.RED;
-		ancestors.push(p);
-		ancestors.push(g);
 	}
 
 	void singleRotationRightChild(Node p, Node g, Stack<Node> ancestors) {
 		g.right = p.left;
 		p.left = g;
-		Node ancestor = ancestors.peek();
-
+		Node ancestor = null;
 		if (g == root) {
 			root = p;
-		} else if (g == ancestor.left) {
-			ancestor.left = p;
 		} else {
-			ancestor.right = p;
+			ancestor = ancestors.peek();
 		}
-		
-		// Color temp = p.color;
-		// p.color = g.color;
-		// g.color = temp;
+
+		if (ancestor != null) {
+			if (p.data < ancestor.data) {
+				ancestor.left = p;
+			} else {
+				ancestor.right = p;
+			}
+		} else {
+			root = p;
+		}
+
 		p.color = Color.BLACK;
 		g.color = Color.RED;
-		ancestors.push(p);
-		ancestors.push(g);
+
 	}
 
 	void doubleRotationLeftChild(Node c, Node p, Node g, Stack<Node> ancestors) {
@@ -216,63 +266,96 @@ public class RBTree {
 	/*
 	 * This method uses the in order iterator to create an ArrayList of Nodes
 	 */
-	// public ArrayList<Node> inOrder() {
-	// RBTreeInOrderIterator iter = new RBTreeInOrderIterator(root);
-	// ArrayList<Node> inorder = new ArrayList<>();
-	// while (iter.hasNext()) {
-	// inorder.add(iter.next());
-	// }
-	// return inorder;
-	// }
+	public ArrayList<Node> inOrder() {
+		RBTreeInOrderIterator iter = new RBTreeInOrderIterator(root);
+		ArrayList<Node> inorder = new ArrayList<>();
+		while (iter.hasNext()) {
+			inorder.add(iter.next());
+		}
+		return inorder;
+	}
 
-	// /*
-	// * This method uses the pre order iterator to create an ArrayList of Nodes
-	// */
-	// public ArrayList<Node> preOrder() {
-	// RBTreePreOrderIterator iter = new RBTreePreOrderIterator(root);
-	// ArrayList<Node> preorder = new ArrayList<>();
-	// while (iter.hasNext()) {
-	// preorder.add(iter.next());
-	// }
-	// return preorder;
-	// }
+	/*
+	 * This method uses the pre order iterator to create an ArrayList of Nodes
+	 */
+	public ArrayList<Node> preOrder() {
+		RBTreePreOrderIterator iter = new RBTreePreOrderIterator(root);
+		ArrayList<Node> preorder = new ArrayList<>();
+		while (iter.hasNext()) {
+			preorder.add(iter.next());
+		}
+		return preorder;
+	}
 
-	// /*
-	// * This method uses the post order iterator to create an ArrayList of Nodes
-	// */
-	// public ArrayList<Node> postOrder() {
-	// RBTreePostOrderIterator iter = new RBTreePostOrderIterator(root);
-	// ArrayList<Node> postorder = new ArrayList<>();
-	// while (iter.hasNext()) {
-	// postorder.add(iter.next());
-	// }
-	// return postorder;
-	// }
+	/*
+	 * This method uses the post order iterator to create an ArrayList of Nodes
+	 */
+	public ArrayList<Node> postOrder() {
+		RBTreePostOrderIterator iter = new RBTreePostOrderIterator(root);
+		ArrayList<Node> postorder = new ArrayList<>();
+		while (iter.hasNext()) {
+			postorder.add(iter.next());
+		}
+		return postorder;
+	}
 
 	public class RBTreeInOrderIterator implements Iterator<Node> {
+		Stack<Node> stackNode = new Stack<>();
+
+		public RBTreeInOrderIterator(Node root) {
+			getSubtree(root);
+		}
+
+		public void getSubtree(Node node) {
+			while (node != NIL) {
+				this.stackNode.push(node);
+				node = node.left;
+			}
+		}
 
 		public boolean hasNext() {
-			return false;
+			return stackNode.size() > 0;
 		}
 
 		public Node next() {
-			return null;
+			Node currNode = stackNode.pop();
+			getSubtree(currNode.right);
+
+			return currNode;
 		}
 	}
 
 	public class RBTreePreOrderIterator implements Iterator<Node> {
+		Stack<Node> stackNode = new Stack<>();
+
+		public RBTreePreOrderIterator(Node root) {
+			this.stackNode.push(root);
+		}
 
 		public boolean hasNext() {
-			return false;
+			return stackNode.size() > 0;
 		}
 
 		public Node next() {
-			return null;
+			Node currNode = this.stackNode.pop();
+			if (currNode.left != NIL) {
+				this.stackNode.push(currNode.left);
+			}
+			if (currNode.right != NIL) {
+				this.stackNode.push(currNode.right);
+			}
+			
+			return currNode;
 		}
 
 	}
 
 	public class RBTreePostOrderIterator implements Iterator<Node> {
+		Node root;
+
+		public RBTreePostOrderIterator(Node root) {
+			this.root = root;
+		}
 
 		public boolean hasNext() {
 			return false;
@@ -285,17 +368,23 @@ public class RBTree {
 
 	public static void main(String[] args) {
 		RBTree testTree = new RBTree();
-		testTree.insert(2);
-		testTree.insert(1);
-		testTree.insert(3);
 		testTree.insert(0);
-		testTree.insert(5);
-		testTree.insert(6);
-		testTree.insert(9);
-		testTree.insert(10);
+		testTree.insert(2);
+		testTree.insert(8);
+		testTree.insert(100);
 		testTree.insert(22);
+		testTree.insert(1000);
+		testTree.insert(600);
+		testTree.insert(-191);
+		testTree.insert(4);
 
 		System.out.println(testTree.toString());
+		ArrayList<Node> preorder = testTree.preOrder();
+		System.out.println(testTree.height());
+		for (Node node : preorder) {
+			System.out.print(node.data + " ");
+		}
+		
 
 		// {(0,RED),(1,BLACK),(2,RED),(3,BLACK),(5,BLACK),(6,BLACK),(9,RED),(10,RED),(22,BLACK)}
 	}
