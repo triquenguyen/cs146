@@ -72,29 +72,53 @@ public class RBTree {
 	}
 
 	public static int getHeight(Node currNode) {
-		int leftHeight, rightHeight = 1;
+		int leftHeight = 0, rightHeight = 0;
+		// Checking root is Null case
 		if (currNode == NIL) {
 			return 0;
+			// checking 1 node tree case
+		} else if (currNode != NIL && currNode.left == NIL && currNode.right == NIL) {
+			return 1;
 		} else {
-			leftHeight = getHeight(currNode.left);
-			rightHeight = getHeight(currNode.right);
-			return Math.max(leftHeight, rightHeight)+1;
+			leftHeight = getHeight(currNode.left); // Recursively find the height of the left subtree
+			rightHeight = getHeight(currNode.right); // Recursively find the height of the right subtree
+			return Math.max(leftHeight, rightHeight) + 1; // Find the max between the left subtree and the right subtree, plus
+																										// 1 for the root node
 		}
 	}
 
 	public int getBlackHeight(Node currNode) {
-		int leftHeight, rightHeight = 1;
+		int leftHeight = 0, rightHeight = 0;
+		// Checking root is Null case
 		if (currNode == NIL) {
 			return 0;
+			// checking 1 node tree case
+		} else if (currNode != NIL && currNode.left == NIL && currNode.right == NIL) {
+			return 1;
 		} else {
-			leftHeight = getHeight(currNode.left);
-			rightHeight = getHeight(currNode.right);
-			return Math.max(leftHeight, rightHeight)+1;
+			// Checking the left node color is black and recursively find the height of the
+			// left subtree
+			if (currNode.left.color == Color.BLACK) {
+				leftHeight = getBlackHeight(currNode.left);
+			} else if (currNode.left.left != null && currNode.left.left.color == Color.BLACK) {
+				leftHeight = getBlackHeight(currNode.left.left);
+			}
+			// Checking the right node color is black and recursively find the height of the
+			// right subtree
+			if (currNode.right.color == Color.BLACK) {
+				rightHeight = getBlackHeight(currNode.right);
+			} else if (currNode.right.right != null && currNode.right.right.color == Color.BLACK) {
+				rightHeight = getBlackHeight(currNode.right.right);
+			}
+			return Math.max(leftHeight, rightHeight) + 1; // Find the max between the left subtree and the right subtree, plus
+																										// 1 for the root node
 		}
 	}
 
 	public boolean insert(int i) {
 		Node newNode = new Node(i, Color.RED);
+
+		// Tree has nothing case: Inserting the node directly and make it the root node
 		if (root == null) {
 			root = newNode;
 			root.color = Color.BLACK;
@@ -103,13 +127,19 @@ public class RBTree {
 			return true;
 		} else {
 			Node currNode = root;
+			// Create a stack of ancestors to manage the parent nodes
 			Stack<Node> ancestors = new Stack<>();
 
 			// Iterate through the tree and find the suitable place for the newNode
 			while (currNode != NIL) {
+				// Fix up the tree by rotating and recoloring from top down to the currNode
+				// To manage the redblack properties of the tree before inserting
 				plsFixMe(currNode, ancestors);
 
+				// Move to the next node depends on the data of inserting node and the currNode
 				if (i < currNode.data) {
+					// Push in the currNode before moving to the next node
+					// currNode now becomes the parent node
 					ancestors.push(currNode);
 					currNode = currNode.left;
 				} else if (i > currNode.data) {
@@ -126,13 +156,18 @@ public class RBTree {
 			} else {
 				ancestors.peek().right = newNode;
 			}
+			// Create NIL nodes for the inserting node
 			newNode.right = NIL;
 			newNode.left = NIL;
 
+			// Make the newNode become the currNode
+			// Fixup the tree again after the newNode is inserted to maintain the RB tree
+			// properties
 			currNode = newNode;
 			plsFixMe(currNode, ancestors);
 			ancestors.push(currNode);
 
+			// Recolor the root to black to maintain the RB tree properties
 			root.color = Color.BLACK;
 		}
 		return true;
@@ -141,14 +176,16 @@ public class RBTree {
 	void plsFixMe(Node currNode, Stack<Node> ancestors) {
 		Node leftChild = currNode.left;
 		Node rightChild = currNode.right;
-		if (currNode.color == Color.BLACK &&
-				leftChild.color == Color.RED &&
-				rightChild.color == Color.RED) {
-			fixUp(currNode);
+		// Recoloring for the case black parent has two red children
+		if (currNode.color == Color.BLACK && leftChild.color == Color.RED && rightChild.color == Color.RED) {
+			currNode.color = Color.RED;
+			leftChild.color = Color.BLACK;
+			rightChild.color = Color.BLACK;
 		}
+		// 2 children node are red case
 		if (currNode.color == Color.RED && ancestors.size() > 1 && ancestors.peek().color == Color.RED) {
-			Node p = ancestors.pop();
-			Node g = ancestors.pop();
+			Node p = ancestors.pop(); // parent node
+			Node g = ancestors.pop(); // grandparent node
 
 			if (currNode == p.left && p == g.left) {
 				singleRotationLeftChild(p, g, ancestors);
@@ -160,6 +197,8 @@ public class RBTree {
 				doubleRotationRightChild(currNode, p, g, ancestors);
 			}
 
+			// Push parent and grandparent back in the stack
+			// After rotating, parent node becomes the parent of the grandparent
 			ancestors.push(p);
 			ancestors.push(g);
 		}
@@ -170,12 +209,15 @@ public class RBTree {
 		p.right = g;
 		Node ancestor = null;
 
+		// Checking if the grandparent is the root
 		if (g == root) {
-			root = p;
+			root = p; // Make the parent become root node
 		} else {
-			ancestor = ancestors.peek();
+			ancestor = ancestors.peek(); // Have greatgrandparent node to connect with the parent after rotating parent
+																		// and grandparent nodes
 		}
 
+		// Determine whether connect parent to greatgrand left or right
 		if (ancestor != null) {
 			if (p.data < ancestor.data) {
 				ancestor.left = p;
@@ -186,6 +228,7 @@ public class RBTree {
 			root = p;
 		}
 
+		// recolor the 2 nodes
 		p.color = Color.BLACK;
 		g.color = Color.RED;
 	}
@@ -219,6 +262,8 @@ public class RBTree {
 		p.right = c.left;
 		g.left = c;
 		c.left = p;
+		// currNode become the parent of the parent and we rotate currNode and
+		// grandparent node
 		singleRotationLeftChild(c, g, ancestors);
 	}
 
@@ -227,12 +272,6 @@ public class RBTree {
 		g.right = c;
 		c.right = p;
 		singleRotationRightChild(c, g, ancestors);
-	}
-
-	void fixUp(Node currNode) {
-		currNode.color = Color.RED;
-		currNode.left.color = Color.BLACK;
-		currNode.right.color = Color.BLACK;
 	}
 
 	/*
@@ -301,9 +340,11 @@ public class RBTree {
 	}
 
 	public class RBTreeInOrderIterator implements Iterator<Node> {
+		// Create a stack to manage the nodes
 		Stack<Node> stackNode = new Stack<>();
 
 		public RBTreeInOrderIterator(Node root) {
+			// Push all the left nodes of root into the stack
 			getSubtree(root);
 		}
 
@@ -319,9 +360,11 @@ public class RBTree {
 		}
 
 		public Node next() {
+			// Pop out the smallest nodes then push its right node into the stack
 			Node currNode = stackNode.pop();
 			getSubtree(currNode.right);
 
+			// The smaller nodes will be return first
 			return currNode;
 		}
 	}
@@ -330,6 +373,7 @@ public class RBTree {
 		Stack<Node> stackNode = new Stack<>();
 
 		public RBTreePreOrderIterator(Node root) {
+			// Push in the root node of the root
 			this.stackNode.push(root);
 		}
 
@@ -339,6 +383,8 @@ public class RBTree {
 
 		public Node next() {
 			Node currNode = this.stackNode.pop();
+			// Push in the right and left nodes of the subtree
+			// When pop, we return the left node
 			if (currNode.right != NIL) {
 				this.stackNode.push(currNode.right);
 			}
@@ -356,17 +402,20 @@ public class RBTree {
 
 		public RBTreePostOrderIterator(Node root) {
 			if (root != NIL) {
+				// Push the root node into the stack
 				this.stackNode.push(root);
+				// Iteratively push the right and left nodes into the stack
 				getSubtree(root.right);
 				getSubtree(root.left);
 			}
-			
+
 		}
 
 		public void getSubtree(Node node) {
 			while (node != NIL) {
 				this.stackNode.push(node);
-				if (node != NIL) {
+				// Push the left nodes into the stack, otherwise, push the right nodes
+				if (node.left != NIL) {
 					node = node.left;
 				} else {
 					node = node.right;
@@ -380,6 +429,8 @@ public class RBTree {
 
 		public Node next() {
 			Node currNode = stackNode.pop();
+			// Checking if the node just popped out is the left node of the peek, then push
+			// in the right node of that peek node
 			if (stackNode.size() > 0 && currNode == this.stackNode.peek().left) {
 				getSubtree(this.stackNode.peek().right);
 			}
@@ -399,33 +450,36 @@ public class RBTree {
 		testTree.insert(6);
 		testTree.insert(9);
 		testTree.insert(10);
+		testTree.insert(7);
+		testTree.insert(123);
+		testTree.insert(1000);
+		testTree.insert(1234);
+		testTree.insert(156);
 
 		System.out.println(testTree.toString());
 		System.out.println("Height: " + testTree.height());
 		System.out.println("Black height: " + testTree.blackHeight());
 
-		// System.out.print("Inorder: ");
-		// ArrayList<Node> inorder = testTree.inOrder();
-		// for (Node node : inorder) {
-		// 	System.out.print(node.data + " ");
-		// }
-		// System.out.println();
+		System.out.print("Inorder: ");
+		ArrayList<Node> inorder = testTree.inOrder();
+		for (Node node : inorder) {
+			System.out.print(node.data + " ");
+		}
+		System.out.println();
 
-		// ArrayList<Node> preorder = testTree.preOrder();
-		// System.out.print("Preoder: ");
-		// for (Node node : preorder) {
-		// 	System.out.print(node.data + " ");
-		// }
-		// System.out.println();
+		ArrayList<Node> preorder = testTree.preOrder();
+		System.out.print("Preoder: ");
+		for (Node node : preorder) {
+			System.out.print(node.data + " ");
+		}
+		System.out.println();
 
-		// ArrayList<Node> postorder = testTree.postOrder();
-		// System.out.print("Postorder: ");
-		// for (Node node : postorder) {
-		// 	System.out.print(node.data + " ");
-		// }
-		// System.out.println();
-		
+		ArrayList<Node> postorder = testTree.postOrder();
+		System.out.print("Postorder: ");
+		for (Node node : postorder) {
+			System.out.print(node.data + " ");
+		}
+		System.out.println();
 
-		// {(0,RED),(1,BLACK),(2,RED),(3,BLACK),(5,BLACK),(6,BLACK),(9,RED),(10,RED),(22,BLACK)}
 	}
 }
