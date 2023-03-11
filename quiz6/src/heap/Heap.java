@@ -33,13 +33,13 @@ public class Heap {
 	// returns the index of the left child of the ith element in the array
 	// for leaves the index will be greater than the heapSize
 	public int left(int i) {
-		return 2 * i;
+		return 2 * i + 1;
 	}
 
 	// returns the index of the right child of the ith element in the array
 	// for leaves the index will be greater than the heapSize
 	public int right(int i) {
-		return 2 * i + 1;
+		return 2 * i + 2;
 	}
 
 	// modifies the data array so that the tree rooted at the loc element
@@ -73,7 +73,7 @@ public class Heap {
 	// HeapSize
 	public void buildMaxHeap() {
 		heapSize = data.length;
-		for (int i = data.length / 2; i >= 0; i--) {
+		for (int i = data.length / 2 - 1; i >= 0; i--) {
 			maxHeapify(i);
 		}
 	}
@@ -84,10 +84,10 @@ public class Heap {
 	}
 
 	public static void main(String[] args) {
-		Heap testHeap = new Heap(new int[] { 4, 1, 3, 2, 16, 9, 10, 14, 8, 7 }, 10);
+		Heap testHeap = new Heap(new int[] { 5, 3, 17, 10, 84, 19, 6, 22, 9 }, 9);
 		testHeap.buildMaxHeap();
 		System.out.println(testHeap.toString());
 	}
-
+	// 5,3,17,10,84,19,6,22,9 -> 84,22,9,10,3,17,6,5,9
 	// 4,1,3,2,16,9,10,14,8,7 -> 16,14,10,8,7,3,2,4,1
 }
