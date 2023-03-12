@@ -51,7 +51,7 @@ public class Heap {
 		int l = left(loc);
 		int r = right(loc);
 
-		if (l < heapSize && data[l] > data[loc]) {
+		if (l < heapSize  && data[l] > data[loc]) {
 			largest = l;
 		} else {
 			largest = loc;
@@ -72,8 +72,8 @@ public class Heap {
 	// converts the data array to an array that represents a max heap of size
 	// HeapSize
 	public void buildMaxHeap() {
-		heapSize = data.length;
-		for (int i = data.length / 2 - 1; i >= 0; i--) {
+		// heapSize = data.length;
+		for (int i = data.length / 2; i >= 0; i--) {
 			maxHeapify(i);
 		}
 	}
@@ -84,7 +84,7 @@ public class Heap {
 	}
 
 	public static void main(String[] args) {
-		Heap testHeap = new Heap(new int[] { 5, 3, 17, 10, 84, 19, 6, 22, 9 }, 9);
+		Heap testHeap = new Heap(new int[] { 4,1,3,2,16,9,10,14,8,7}, 3);
 		testHeap.buildMaxHeap();
 		System.out.println(testHeap.toString());
 	}
