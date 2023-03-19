@@ -24,7 +24,7 @@ public class RadixSort {
 		Arrays.fill(count, 0);
 
 		/********** YOUR CODE GOES HERE ***********/
-		// Count elements based on the place 
+		// Count elements based on the place
 		for (int j = 0; j < size; j++) {
 			count[(arr[j] / place) % 10]++;
 		}
@@ -33,7 +33,7 @@ public class RadixSort {
 			count[i] += count[i - 1];
 		}
 
-		// Sorting the array 
+		// Sorting the array
 		for (int j = size - 1; j >= 0; j--) {
 			output[count[(arr[j] / place) % 10] - 1] = arr[j];
 			count[(arr[j] / place) % 10]--;
@@ -118,7 +118,7 @@ public class RadixSort {
 	}
 
 	public static void main(String[] args) {
-		int[] testArray = new int[] { 355, 329};
+		int[] testArray = new int[] { 329, 355 };
 		radixSort2(testArray);
 		printArray(testArray);
 	}

@@ -23,6 +23,16 @@ public class Partition {
 	 * What sort of input arrays will enable Hoare’s algorithm to still create
 	 * relatively equal size partitions whereas Lomuto’s algorithm will create
 	 * unequal partitions?
+	 * 
+	 * Answer:
+	 * When the input array's elements are all the same, for example [1,1,1,1],
+	 * the lomuto's algorithm will keep swapping every single element because of the
+	 * condition
+	 * always looks for equal cases, this will result in unbalance.
+	 * 
+	 * In Hoare's algorithm, we only swap when the elements are either larger or
+	 * less than the
+	 * pivot, which prevent the problem.
 	 */
 
 	public static int partitionHoare(int[] arr, int low, int high) {
