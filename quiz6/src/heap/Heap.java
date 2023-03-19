@@ -26,7 +26,7 @@ public class Heap {
 		if (i == 0) {
 			return -1;
 		} else {
-			return i / 2;
+			return (i - 1) / 2;
 		}
 	}
 
@@ -51,7 +51,7 @@ public class Heap {
 		int l = left(loc);
 		int r = right(loc);
 
-		if (l < heapSize  && data[l] > data[loc]) {
+		if (l < heapSize && data[l] > data[loc]) {
 			largest = l;
 		} else {
 			largest = loc;
@@ -62,19 +62,31 @@ public class Heap {
 		}
 
 		if (largest != loc) {
-			int temp = data[loc];
-			data[loc] = data[largest];
-			data[largest] = temp;
+			swap(loc, largest);
 			maxHeapify(largest);
 		}
+	}
+
+	private void swap(int i, int j) {
+		int temp = data[i];
+		data[i] = data[j];
+		data[j] = temp;
 	}
 
 	// converts the data array to an array that represents a max heap of size
 	// HeapSize
 	public void buildMaxHeap() {
-		// heapSize = data.length;
-		for (int i = data.length / 2; i >= 0; i--) {
+		for (int i = heapSize / 2 - 1; i >= 0; i--) {
 			maxHeapify(i);
+		}
+	}
+
+	public void heapSort() {
+		buildMaxHeap();
+		for (int i = heapSize - 1; i >= 1; i--) {
+			swap(0, i);
+			heapSize--;
+			maxHeapify(0);
 		}
 	}
 
@@ -84,10 +96,13 @@ public class Heap {
 	}
 
 	public static void main(String[] args) {
-		Heap testHeap = new Heap(new int[] { 4,1,3,2,16,9,10,14,8,7}, 3);
-		testHeap.buildMaxHeap();
-		System.out.println(testHeap.toString());
+		int[] arr = new int[] { 4, 1, 3, 2, 16, 9, 10, 14, 8, 7, 0, 11, 5 };
+		Heap testHeap = new Heap(arr, arr.length);
+		testHeap.heapSort();
+		for (int i : testHeap.data) {
+			System.out.print(i + " ");
+		}
 	}
-	// 5,3,17,10,84,19,6,22,9 -> 84,22,9,10,3,17,6,5,9
-	// 4,1,3,2,16,9,10,14,8,7 -> 16,14,10,8,7,3,2,4,1
+	// 5,3,17,10,84,19,6,22,9 -> 84,22,19,10,3,17,6,5,9
+	// 4,1,3,2,16,9,10,14,8,7 -> 16,14,10,8,7,9,3,2,4,1
 }
