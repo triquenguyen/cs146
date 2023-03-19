@@ -63,7 +63,7 @@ public class Heap {
 			swap(loc,largest);
 			maxHeapify(largest);
 		}
-				
+
 	}
 	
 	private void swap(int i, int j) {
