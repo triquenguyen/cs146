@@ -2,6 +2,7 @@ package sorting;
 
 import java.util.Arrays;
 import java.util.Random;
+import sorting.Partition;
 
 public class ComparisonSorter {
 
@@ -67,20 +68,24 @@ public class ComparisonSorter {
 		int n = arr.length;
 		Heap arrHeap = new Heap(arr, n);
 
-		arrHeap.buildMaxHeap();
+		if (n==0) {
+			arrHeap.parent(n);
+		} else {
+			arrHeap.buildMaxHeap();
 
-		for (int i = arrHeap.getHeapSize() - 1; i >= 1; i--) {
-			int temp = arr[0];
-			arr[0] = arr[i];
-			arr[i] = temp;
-			n--;
-			arrHeap.setHeapSize(n);
-			arrHeap.maxHeapify(0);
+			for (int i = arrHeap.getHeapSize() - 1; i >= 1; i--) {
+				int temp = arr[0];
+				arr[0] = arr[i];
+				arr[i] = temp;
+				n--;
+				arrHeap.setHeapSize(n);
+				arrHeap.maxHeapify(0);
+			}
 		}
 	}
 
 	public static void quickSort(int[] arr) {
-
+		quickSortLomuto(arr, 0, arr.length - 1);
 	}
 
 	public static void compare(int n) {
@@ -132,7 +137,7 @@ public class ComparisonSorter {
 	}
 
 	public static void main(String[] args) {
-		int[] arr = new int[] { };
+		int[] arr = new int[] {320, 13, 45, 235, 34, -30, -2, 0 };
 		heapSort(arr);
 		for (int i : arr) {
 			System.out.print(i + " ");
