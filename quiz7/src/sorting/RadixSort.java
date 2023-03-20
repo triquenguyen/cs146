@@ -97,16 +97,19 @@ public class RadixSort {
 		 * Answer: In radix sort 2, we sort array elements based on the digits order,
 		 * from most significant digit to least significant digit.
 		 * As we are sorting in that order, then the least significant digits will
-		 * compared lastly and this will determine the order
-		 * of the elements in the array, which results in incorrectness.
+		 * compared lastly and this will determine the order of the elements in 
+		 * the array, which results in incorrectness.
 		 * 
-		 * For example, comparing 355 and 329, after do sorting place = 2, we have 355 >
-		 * 329 (as 5 > 2). However, at place = 3,
-		 * it results in 329 > 355 because it compares 9 and 5.
+		 * For example, comparing 355 and 329, after do sorting place = 2, we have 
+		 * 355 > 329 (as 5 > 2). However, at place = 3, it results in 329 > 355 
+		 * because it compares 9 and 5.
 		 * 
 		 * If we have an array with more elements, elements' most significant digits
 		 * will be sorted correctly but the least significant digits
 		 * will mess up the order of those same most significant digits
+		 * 
+		 * Therefore, a conclusion for this problem is the order of significant 
+		 * when comparing the digits is important.
 		 */
 	}
 
