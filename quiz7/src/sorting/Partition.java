@@ -25,12 +25,20 @@ public class Partition {
 	 * unequal partitions?
 	 * 
 	 * Answer:
+	 * CASE 1:
 	 * When the input array's elements are all the same, for example [1,1,1,1],
 	 * the lomuto's algorithm will keep swapping every single element because of the
 	 * condition always solve for equal cases, this will result in unbalance.
 	 * 
 	 * In Hoare's algorithm, we only swap when the elements are either larger or
 	 * less than the pivot, which prevent the problem.
+	 * 
+	 * CASE 2:
+	 * For the sorted array, the Lomuto's algorithm will also make the partition
+	 * uneven as well since at the end of the algo, we always swap the
+	 * next element (arr[i+1]) with the pivot (arr[high]) every time even the
+	 * array is sorted. The swap at the end will make the array from sorted to
+	 * unsorted.
 	 */
 
 	public static int partitionHoare(int[] arr, int low, int high) {
