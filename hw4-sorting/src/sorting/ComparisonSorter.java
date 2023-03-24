@@ -2,7 +2,6 @@ package sorting;
 
 import java.util.Arrays;
 import java.util.Random;
-import sorting.Partition;
 
 public class ComparisonSorter {
 
@@ -65,27 +64,12 @@ public class ComparisonSorter {
 	}
 
 	public static void heapSort(int[] arr) {
-		int n = arr.length;
-		Heap arrHeap = new Heap(arr, n);
-
-		if (n==0) {
-			arrHeap.parent(n);
-		} else {
-			arrHeap.buildMaxHeap();
-
-			for (int i = arrHeap.getHeapSize() - 1; i >= 1; i--) {
-				int temp = arr[0];
-				arr[0] = arr[i];
-				arr[i] = temp;
-				n--;
-				arrHeap.setHeapSize(n);
-				arrHeap.maxHeapify(0);
-			}
-		}
+		Heap arrHeap = new Heap(arr, arr.length);
+		arrHeap.heapSort();
 	}
 
 	public static void quickSort(int[] arr) {
-		quickSortLomuto(arr, 0, arr.length - 1);
+		Partition.quickSortHoare(arr, 0, arr.length - 1);
 	}
 
 	public static void compare(int n) {
@@ -133,16 +117,156 @@ public class ComparisonSorter {
 		end = System.nanoTime();
 		runtime = end - start;
 		System.out.println("QuickSort took: " + runtime);
+	}
 
+	// Creates arrays of integers 1 to n in sorted order and runs the different sorting algorithms on the arrays
+	public static void compareSorted(int n) {
+		int[] insertionData = new int[n];
+		int[] mergeData = new int[n];
+		int[] heapData = new int[n];
+		int[] quickData = new int[n];
+		long start;
+		long end;
+		long runtime;
+		Random randomGenerator = new Random();
+
+		for (int i = 0; i < n; i++) {
+			int j = i+1;
+			insertionData[i] = mergeData[i] = heapData[i] = quickData[i] = j;
+		}
+		start = System.nanoTime();
+
+		insertionSort(insertionData);
+
+		end = System.nanoTime();
+		runtime = end - start;
+		System.out.println("Insertion Sort took: " + runtime);
+
+		start = System.nanoTime();
+
+		mergeSort(mergeData);
+
+		end = System.nanoTime();
+		runtime = end - start;
+		System.out.println("Merge Sort took: " + runtime);
+
+		start = System.nanoTime();
+
+		heapSort(heapData);
+
+		end = System.nanoTime();
+		runtime = end - start;
+		System.out.println("Heap Sort took: " + runtime);
+
+		start = System.nanoTime();
+
+		quickSort(quickData);
+
+		end = System.nanoTime();
+		runtime = end - start;
+		System.out.println("QuickSort took: " + runtime);
+	}
+
+	// Creates an array of integers 1 to n in reverse sorted order and runs the different sorting algorithms on the arrays
+	public static void compareReverseSorted(int n) {
+		int[] insertionData = new int[n];
+		int[] mergeData = new int[n];
+		int[] heapData = new int[n];
+		int[] quickData = new int[n];
+		long start;
+		long end;
+		long runtime;
+		Random randomGenerator = new Random();
+
+		for (int i = 0; i < n; i++) {
+			int j = 1;
+			insertionData[i] = mergeData[i] = heapData[i] = quickData[i] = j;
+			j++;
+		}
+		start = System.nanoTime();
+
+		insertionSort(insertionData);
+
+		end = System.nanoTime();
+		runtime = end - start;
+		System.out.println("Insertion Sort took: " + runtime);
+
+		start = System.nanoTime();
+
+		mergeSort(mergeData);
+
+		end = System.nanoTime();
+		runtime = end - start;
+		System.out.println("Merge Sort took: " + runtime);
+
+		start = System.nanoTime();
+
+		heapSort(heapData);
+
+		end = System.nanoTime();
+		runtime = end - start;
+		System.out.println("Heap Sort took: " + runtime);
+
+		start = System.nanoTime();
+
+		quickSort(quickData);
+
+		end = System.nanoTime();
+		runtime = end - start;
+		System.out.println("QuickSort took: " + runtime);
+	}
+
+	// Creates an array of n 1s and runs the different sorting algorithms on the arrays
+	public static void compareDuplicates(int n) {
+		int[] insertionData = new int[n];
+		int[] mergeData = new int[n];
+		int[] heapData = new int[n];
+		int[] quickData = new int[n];
+		long start;
+		long end;
+		long runtime;
+		Random randomGenerator = new Random();
+
+		for (int i = 0; i < n; i++) {
+			insertionData[i] = mergeData[i] = heapData[i] = quickData[i] = 1;
+		}
+		start = System.nanoTime();
+
+		insertionSort(insertionData);
+
+		end = System.nanoTime();
+		runtime = end - start;
+		System.out.println("Insertion Sort took: " + runtime);
+
+		start = System.nanoTime();
+
+		mergeSort(mergeData);
+
+		end = System.nanoTime();
+		runtime = end - start;
+		System.out.println("Merge Sort took: " + runtime);
+
+		start = System.nanoTime();
+
+		heapSort(heapData);
+
+		end = System.nanoTime();
+		runtime = end - start;
+		System.out.println("Heap Sort took: " + runtime);
+
+		start = System.nanoTime();
+
+		quickSort(quickData);
+
+		end = System.nanoTime();
+		runtime = end - start;
+		System.out.println("QuickSort took: " + runtime);
 	}
 
 	public static void main(String[] args) {
-		int[] arr = new int[] {320, 13, 45, 235, 34, -30, -2, 0 };
-		heapSort(arr);
-		for (int i : arr) {
-			System.out.print(i + " ");
-		}
-		//compare(Integer.parseInt(args[0]));
+		// compareSorted(Integer.parseInt(args[0]));
+
+		compareSorted(100);
 	}
 
 }

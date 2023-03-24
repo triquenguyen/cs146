@@ -28,7 +28,6 @@ public class Heap {
 			return -1;
 		else
 			return (i-1)/2;
-		
 	}
 	
 	//returns the index of the left child of the ith element in the array
@@ -77,6 +76,15 @@ public class Heap {
 		int n = heapSize;
 		for(int i=(n/2)-1;i>=0;i--) {
 			maxHeapify(i);
+		}
+	}
+
+	public void heapSort() {
+		buildMaxHeap();
+		for (int i = heapSize - 1; i >= 1; i--) {
+			swap(0, i);
+			heapSize--;
+			maxHeapify(0);
 		}
 	}
 
