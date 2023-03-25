@@ -119,7 +119,8 @@ public class ComparisonSorter {
 		System.out.println("QuickSort took: " + runtime);
 	}
 
-	// Creates arrays of integers 1 to n in sorted order and runs the different sorting algorithms on the arrays
+	// Creates arrays of integers 1 to n in sorted order and runs the different
+	// sorting algorithms on the arrays
 	public static void compareSorted(int n) {
 		int[] insertionData = new int[n];
 		int[] mergeData = new int[n];
@@ -131,9 +132,10 @@ public class ComparisonSorter {
 		Random randomGenerator = new Random();
 
 		for (int i = 0; i < n; i++) {
-			int j = i+1;
+			int j = i + 1;
 			insertionData[i] = mergeData[i] = heapData[i] = quickData[i] = j;
 		}
+
 		start = System.nanoTime();
 
 		insertionSort(insertionData);
@@ -167,7 +169,8 @@ public class ComparisonSorter {
 		System.out.println("QuickSort took: " + runtime);
 	}
 
-	// Creates an array of integers 1 to n in reverse sorted order and runs the different sorting algorithms on the arrays
+	// Creates an array of integers 1 to n in reverse sorted order and runs the
+	// different sorting algorithms on the arrays
 	public static void compareReverseSorted(int n) {
 		int[] insertionData = new int[n];
 		int[] mergeData = new int[n];
@@ -177,12 +180,13 @@ public class ComparisonSorter {
 		long end;
 		long runtime;
 		Random randomGenerator = new Random();
+		int j = n;
 
-		for (int i = 0; i < n; i++) {
-			int j = 1;
+		for (int i = 0; i < n; i++) {			
 			insertionData[i] = mergeData[i] = heapData[i] = quickData[i] = j;
-			j++;
+			j--;
 		}
+
 		start = System.nanoTime();
 
 		insertionSort(insertionData);
@@ -216,7 +220,8 @@ public class ComparisonSorter {
 		System.out.println("QuickSort took: " + runtime);
 	}
 
-	// Creates an array of n 1s and runs the different sorting algorithms on the arrays
+	// Creates an array of n 1s and runs the different sorting algorithms on the
+	// arrays
 	public static void compareDuplicates(int n) {
 		int[] insertionData = new int[n];
 		int[] mergeData = new int[n];
@@ -230,6 +235,7 @@ public class ComparisonSorter {
 		for (int i = 0; i < n; i++) {
 			insertionData[i] = mergeData[i] = heapData[i] = quickData[i] = 1;
 		}
+
 		start = System.nanoTime();
 
 		insertionSort(insertionData);
@@ -264,9 +270,23 @@ public class ComparisonSorter {
 	}
 
 	public static void main(String[] args) {
+		// compare(Integer.parseInt(args[0]));
+		// System.out.println();
 		// compareSorted(Integer.parseInt(args[0]));
+		// System.out.println();
+		// compareReverseSorted(Integer.parseInt(args[0]));
+		// System.out.println();
+		// compareDuplicates(Integer.parseInt(args[0]));
 
-		compareSorted(100);
+		compare(1000);
+		System.out.println();
+		compareSorted(1000);
+		System.out.println();
+		compareReverseSorted(1000);
+		System.out.println();
+		compareDuplicates(1000);
+
+		//compareSorted(10);
 	}
 
 }
