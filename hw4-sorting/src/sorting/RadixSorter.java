@@ -31,15 +31,14 @@ public class RadixSorter {
 		}
 
 		int j = 0;
-		for (int i = 0; i<10; i++) {
+		for (int i = 0; i < 10; i++) {
 			while (!queueArr[i].isEmpty()) {
-				arr[j] = queueArr[i].dequeue();
-				j++;
+				arr[j++] = queueArr[i].dequeue();
 			}
 		}
 	}
 
-	public static void radixSort(int[] arr) {
+	public static void radixSort(int[] arr) {																
 		// Get the maximum to know how many digits I have
 		int max = getMax(arr);
 
@@ -49,11 +48,10 @@ public class RadixSorter {
 	}
 
 	public static void main(String[] args) {
-		int[] arr = new int[] {5555,2,3,17,1210,84,191236,2212,9, 2147483647};
+		int[] arr = new int[] { 5555, 2, 3, 17, 1210, 84, 191236, 2212, 9, 2147483647 };
 		radixSort(arr);
 		for (int i : arr) {
 			System.out.print(i + " ");
 		}
 	}
-
 }

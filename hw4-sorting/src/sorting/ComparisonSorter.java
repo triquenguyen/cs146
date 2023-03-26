@@ -86,6 +86,11 @@ public class ComparisonSorter {
 			int j = randomGenerator.nextInt() % 10001;
 			insertionData[i] = mergeData[i] = heapData[i] = quickData[i] = j;
 		}
+
+		for (int i : insertionData) {
+			System.out.print(i + " ");
+		}
+
 		start = System.nanoTime();
 
 		insertionSort(insertionData);
@@ -129,7 +134,6 @@ public class ComparisonSorter {
 		long start;
 		long end;
 		long runtime;
-		Random randomGenerator = new Random();
 
 		for (int i = 0; i < n; i++) {
 			int j = i + 1;
@@ -179,7 +183,6 @@ public class ComparisonSorter {
 		long start;
 		long end;
 		long runtime;
-		Random randomGenerator = new Random();
 		int j = n;
 
 		for (int i = 0; i < n; i++) {			
@@ -230,7 +233,6 @@ public class ComparisonSorter {
 		long start;
 		long end;
 		long runtime;
-		Random randomGenerator = new Random();
 
 		for (int i = 0; i < n; i++) {
 			insertionData[i] = mergeData[i] = heapData[i] = quickData[i] = 1;
@@ -278,15 +280,12 @@ public class ComparisonSorter {
 		// System.out.println();
 		// compareDuplicates(Integer.parseInt(args[0]));
 
-		compare(1000);
-		System.out.println();
-		compareSorted(1000);
-		System.out.println();
-		compareReverseSorted(1000);
-		System.out.println();
-		compareDuplicates(1000);
-
-		//compareSorted(10);
-	}
-
+		compare(10);
+		// System.out.println();
+		// compareSorted(10);
+		// System.out.println();
+		// compareReverseSorted(10);
+		// System.out.println();
+		// compareDuplicates(10);
+ 	}
 }
