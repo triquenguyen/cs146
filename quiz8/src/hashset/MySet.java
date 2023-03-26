@@ -22,6 +22,7 @@ public class MySet {
 	private final int primes[] = { 7, 23, 59, 131, 271, 563, 1171,
 			2083, 4441, 8839, 16319, 32467,
 			65701, 131413, 263983, 528991 };
+
 	private int primeIndex; // last prime used
 
 	private int nextPrime(int p) {
@@ -42,26 +43,51 @@ public class MySet {
 
 	// return the hash function value for k
 	private int hash(Integer k) {
-
 		return Math.abs(k.hashCode() % tableSize);
 	}
 
 	// "double" the table size and reinsert the values stored in the
 	// current table. the table size should remain prime
 	private void resize() {
-
+		primeIndex++;
+		tableSize = nextPrime(primeIndex);
 	}
 
 	// returns true when e is in the set, otherwise returns false
 	public boolean find(Integer e) {
-		return false;
+		int hashCode = hash(e);
+		Node currNode = table[hashCode];
 
+		while (currNode.next != null) {
+			if (currNode.element == e) {
+				return true;
+			} else {
+				currNode = currNode.next;
+			}
+		}
+
+		return false;
 	}
 
 	// if e is not in the set add e to the set otherwise the set does not change
 	// if after adding the new element numElements > 2*tableSize then call resize
 	public void addElement(Integer e) {
+		if (!find(e)) {
+			int hashCode = hash(e);
+			Node currNode = table[hashCode];
+			if (currNode == null) {
+				currNode = new Node(e, null);
+			} else {
+				Node nextNode = table[hashCode];
+				currNode = new Node(e, nextNode);
+			}
 
+			numElements++;
+
+			if (numElements > 2 * tableSize)
+				resize();
+
+		}
 	}
 
 	// returns a string representation for the set
@@ -78,7 +104,7 @@ public class MySet {
 	 * The string representation of this set is {2,4,1,3}
 	 */
 	public String toString() {
-
+		return " ";
 	}
 
 	public class MySetIterator implements Iterator<Integer> {
@@ -129,20 +155,23 @@ public class MySet {
 	/*
 	 ******** YOU DON"T NEED TO IMPLEMENT THESE METHODS **************
 	 */
-	public MySet intersect(MySet s) {
-		// return a new set that contains the intersection of the elements in
-		// this set and the elements in the set s
-	}
+	// public MySet intersect(MySet s) {
+	// // return a new set that contains the intersection of the elements in
+	// // this set and the elements in the set s
+	// }
 
-	public MySet union(MySet s) {
-		// return a new set that contains the union of the elements in
-		// this set and the elements in the set s
-	}
+	// public MySet union(MySet s) {
+	// // return a new set that contains the union of the elements in
+	// // this set and the elements in the set s
+	// }
 
-	public MySet difference(MySet s) {
-		// return a new set that contains the difference of the elements in
-		// this set and the elements in the set s
-		// this - s (i.e. all the elements in this that are not in s)
+	// public MySet difference(MySet s) {
+	// // return a new set that contains the difference of the elements in
+	// // this set and the elements in the set s
+	// // this - s (i.e. all the elements in this that are not in s)
+	// }
+
+	public static void main(String[] args) {
 	}
 
 }
