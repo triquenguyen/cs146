@@ -87,10 +87,6 @@ public class ComparisonSorter {
 			insertionData[i] = mergeData[i] = heapData[i] = quickData[i] = j;
 		}
 
-		for (int i : insertionData) {
-			System.out.print(i + " ");
-		}
-
 		start = System.nanoTime();
 
 		insertionSort(insertionData);
@@ -185,7 +181,7 @@ public class ComparisonSorter {
 		long runtime;
 		int j = n;
 
-		for (int i = 0; i < n; i++) {			
+		for (int i = 0; i < n; i++) {
 			insertionData[i] = mergeData[i] = heapData[i] = quickData[i] = j;
 			j--;
 		}
@@ -280,12 +276,12 @@ public class ComparisonSorter {
 		// System.out.println();
 		// compareDuplicates(Integer.parseInt(args[0]));
 
-		compare(10);
-		// System.out.println();
-		// compareSorted(10);
-		// System.out.println();
-		// compareReverseSorted(10);
-		// System.out.println();
-		// compareDuplicates(10);
- 	}
+		compare(100000);
+		System.out.println();
+		compareSorted(100000);
+		System.out.println();
+		compareReverseSorted(100000);
+		System.out.println();
+		compareDuplicates(100000);
+	}
 }
