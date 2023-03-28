@@ -58,12 +58,11 @@ public class MySet {
 		int hashCode = hash(e);
 		Node currNode = table[hashCode];
 
-		while (currNode.next != null) {
+		while (currNode != null) {
 			if (currNode.element == e) {
 				return true;
-			} else {
-				currNode = currNode.next;
 			}
+			currNode = currNode.next;
 		}
 
 		return false;
@@ -74,11 +73,11 @@ public class MySet {
 	public void addElement(Integer e) {
 		if (!find(e)) {
 			int hashCode = hash(e);
-			Node currNode = table[hashCode];
-			if (currNode == null) {
-				currNode = new Node(e, null);
+			if (table[hashCode] == null) {
+				table[hashCode] = new Node(e, null);
 			} else {
-				Node nextNode = table[hashCode];
+				Node currNode = table[hashCode];
+				Node nextNode = currNode;
 				currNode = new Node(e, nextNode);
 			}
 
@@ -86,7 +85,6 @@ public class MySet {
 
 			if (numElements > 2 * tableSize)
 				resize();
-
 		}
 	}
 
@@ -104,7 +102,17 @@ public class MySet {
 	 * The string representation of this set is {2,4,1,3}
 	 */
 	public String toString() {
-		return " ";
+		String result = "{";
+
+		for (Node node : table) {
+			Node currNode = node;
+			while (currNode != null) {
+				result += currNode.element + ",";
+				currNode = currNode.next;
+			}
+		}
+		result = result.substring(0, result.length() - 1) + "}";
+		return result;
 	}
 
 	public class MySetIterator implements Iterator<Integer> {
@@ -135,16 +143,15 @@ public class MySet {
 			Integer rVal = currentNode.element;
 			if (currentNode.next != null) {
 				// what should the currentNode be?
-
+				currentNode = currentNode.next;
+				rVal = currentNode.element;
 			} else {
 				// No more elements in the current bucket
 				// I need to get the next bucket
-
+				nextList();
 			}
 			return rVal;
-
 		}
-
 	}
 
 	public Iterator<Integer> iterator() {
@@ -172,6 +179,14 @@ public class MySet {
 	// }
 
 	public static void main(String[] args) {
+		MySet testSet = new MySet(7);
+		testSet.addElement(4);
+		testSet.addElement(2);
+		testSet.addElement(3);
+
+		testSet.addElement(1);
+
+		System.out.println(testSet.toString());
 	}
 
 }
