@@ -51,12 +51,22 @@ public class MySet {
 	private void resize() {
 		primeIndex++;
 		tableSize = nextPrime(primeIndex);
+
+		Node tableTemp[] = table;
+		table = new Node[tableSize];
+
+		for (Node node : tableTemp) {
+			while (node != null) {
+				addElement(node.element);
+				node = node.next;
+			}
+		}
 	}
 
 	// returns true when e is in the set, otherwise returns false
 	public boolean find(Integer e) {
-		int hashCode = hash(e);
-		Node currNode = table[hashCode];
+		int index = hash(e);
+		Node currNode = table[index];
 
 		while (currNode != null) {
 			if (currNode.element == e) {
@@ -71,20 +81,17 @@ public class MySet {
 	// if e is not in the set add e to the set otherwise the set does not change
 	// if after adding the new element numElements > 2*tableSize then call resize
 	public void addElement(Integer e) {
-		if (!find(e)) {
-			int hashCode = hash(e);
-			if (table[hashCode] == null) {
-				table[hashCode] = new Node(e, null);
-			} else {
-				Node currNode = table[hashCode];
-				Node nextNode = currNode;
-				currNode = new Node(e, nextNode);
-			}
+		if (find(e)) {
+			return;
+		}
 
-			numElements++;
+		int index = hash(e);
+		Node nextNode = table[index];
+		table[index] = new Node(e, nextNode);
+		numElements++;
 
-			if (numElements > 2 * tableSize)
-				resize();
+		if (numElements > 2 * tableSize) {
+			resize();
 		}
 	}
 
@@ -113,6 +120,30 @@ public class MySet {
 		}
 		result = result.substring(0, result.length() - 1) + "}";
 		return result;
+	}
+
+	public int getTableSize() {
+		return this.tableSize;
+	}
+
+	public void setTableSize(int tableSize) {
+		this.tableSize = tableSize;
+	}
+
+	public int getNumElements() {
+		return this.numElements;
+	}
+
+	public void setNumElements(int numElements) {
+		this.numElements = numElements;
+	}
+
+	public int getPrimeIndex() {
+		return this.primeIndex;
+	}
+
+	public void setPrimeIndex(int primeIndex) {
+		this.primeIndex = primeIndex;
 	}
 
 	public class MySetIterator implements Iterator<Integer> {
@@ -179,12 +210,22 @@ public class MySet {
 	// }
 
 	public static void main(String[] args) {
-		MySet testSet = new MySet(7);
+		MySet testSet = new MySet(6);
 		testSet.addElement(4);
 		testSet.addElement(2);
 		testSet.addElement(3);
-
 		testSet.addElement(1);
+		testSet.addElement(6);
+		testSet.addElement(7);
+		testSet.addElement(5);
+		testSet.addElement(8);
+		testSet.addElement(17);
+		testSet.addElement(51);
+		testSet.addElement(18);
+		testSet.addElement(23);
+		testSet.addElement(12);
+		testSet.addElement(16);
+		testSet.addElement(19);
 
 		System.out.println(testSet.toString());
 	}
