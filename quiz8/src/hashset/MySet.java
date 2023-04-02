@@ -111,39 +111,21 @@ public class MySet {
 	public String toString() {
 		String result = "{";
 
-		for (Node node : table) {
-			Node currNode = node;
-			while (currNode != null) {
-				result += currNode.element + ",";
-				currNode = currNode.next;
-			}
+		Iterator<Integer> iter = iterator();
+
+		while (iter.hasNext()) {	
+			result += iter.next();
 		}
-		result = result.substring(0, result.length() - 1) + "}";
+	
+		// for (Node node : table) {
+		// 	Node currNode = node;
+		// 	while (currNode != null) {
+		// 		result += currNode.element + ",";
+		// 		currNode = currNode.next;
+		// 	}
+		// }
+		//result = result.substring(0, result.length() - 1) + "}";
 		return result;
-	}
-
-	public int getTableSize() {
-		return this.tableSize;
-	}
-
-	public void setTableSize(int tableSize) {
-		this.tableSize = tableSize;
-	}
-
-	public int getNumElements() {
-		return this.numElements;
-	}
-
-	public void setNumElements(int numElements) {
-		this.numElements = numElements;
-	}
-
-	public int getPrimeIndex() {
-		return this.primeIndex;
-	}
-
-	public void setPrimeIndex(int primeIndex) {
-		this.primeIndex = primeIndex;
 	}
 
 	public class MySetIterator implements Iterator<Integer> {
@@ -172,6 +154,7 @@ public class MySet {
 		// Returns the next element in the iteration.
 		public Integer next() {
 			Integer rVal = currentNode.element;
+
 			if (currentNode.next != null) {
 				// what should the currentNode be?
 				currentNode = currentNode.next;
@@ -181,6 +164,7 @@ public class MySet {
 				// I need to get the next bucket
 				nextList();
 			}
+
 			return rVal;
 		}
 	}
@@ -189,25 +173,6 @@ public class MySet {
 		// returns an iterator for the set
 		return new MySetIterator();
 	}
-
-	/*
-	 ******** YOU DON"T NEED TO IMPLEMENT THESE METHODS **************
-	 */
-	// public MySet intersect(MySet s) {
-	// // return a new set that contains the intersection of the elements in
-	// // this set and the elements in the set s
-	// }
-
-	// public MySet union(MySet s) {
-	// // return a new set that contains the union of the elements in
-	// // this set and the elements in the set s
-	// }
-
-	// public MySet difference(MySet s) {
-	// // return a new set that contains the difference of the elements in
-	// // this set and the elements in the set s
-	// // this - s (i.e. all the elements in this that are not in s)
-	// }
 
 	public static void main(String[] args) {
 		MySet testSet = new MySet(6);
@@ -219,15 +184,14 @@ public class MySet {
 		testSet.addElement(7);
 		testSet.addElement(5);
 		testSet.addElement(8);
-		testSet.addElement(17);
-		testSet.addElement(51);
-		testSet.addElement(18);
-		testSet.addElement(23);
-		testSet.addElement(12);
-		testSet.addElement(16);
-		testSet.addElement(19);
+		// testSet.addElement(17);
+		// testSet.addElement(51);
+		// testSet.addElement(18);
+		// testSet.addElement(23);
+		// testSet.addElement(12);
+		// testSet.addElement(16);
+		// testSet.addElement(19);
 
 		System.out.println(testSet.toString());
 	}
-
 }
