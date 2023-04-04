@@ -86,14 +86,23 @@ public class MySet {
 		}
 
 		int index = hash(e);
-		Node nextNode = table[index];
-		table[index] = new Node(e, nextNode);
+		Node currNode = table[index];
+		table[index] = new Node(e, currNode);
 		numElements++;
 
 		if (numElements > 2 * tableSize) {
 			resize();
 		}
 	}
+
+	public int getTableSize() {
+		return this.tableSize;
+	}
+
+	public int getNumElements() {
+		return this.numElements;
+	}
+
 
 	// returns a string representation for the set
 	// the string representation of the set is { followed by a comma delimiter list
@@ -113,18 +122,11 @@ public class MySet {
 
 		Iterator<Integer> iter = iterator();
 
-		while (iter.hasNext()) {	
-			result += iter.next();
+		while (iter.hasNext()) {
+			result += iter.next() + ",";
 		}
-	
-		// for (Node node : table) {
-		// 	Node currNode = node;
-		// 	while (currNode != null) {
-		// 		result += currNode.element + ",";
-		// 		currNode = currNode.next;
-		// 	}
-		// }
-		//result = result.substring(0, result.length() - 1) + "}";
+
+		result = result.substring(0, result.length() - 1) + "}";
 		return result;
 	}
 
@@ -162,6 +164,7 @@ public class MySet {
 			} else {
 				// No more elements in the current bucket
 				// I need to get the next bucket
+				currentList++;
 				nextList();
 			}
 
@@ -184,14 +187,14 @@ public class MySet {
 		testSet.addElement(7);
 		testSet.addElement(5);
 		testSet.addElement(8);
-		// testSet.addElement(17);
-		// testSet.addElement(51);
-		// testSet.addElement(18);
-		// testSet.addElement(23);
-		// testSet.addElement(12);
-		// testSet.addElement(16);
-		// testSet.addElement(19);
+		testSet.addElement(17);
+		testSet.addElement(51);
+		testSet.addElement(18);
+		testSet.addElement(23);
+		testSet.addElement(12);
+		testSet.addElement(16);
+		testSet.addElement(19);
 
-		System.out.println(testSet.toString());
+		System.out.println(testSet.getTableSize());
 	}
 }
