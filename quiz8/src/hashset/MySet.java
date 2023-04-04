@@ -22,7 +22,6 @@ public class MySet {
 	private final int primes[] = { 7, 23, 59, 131, 271, 563, 1171,
 			2083, 4441, 8839, 16319, 32467,
 			65701, 131413, 263983, 528991 };
-
 	private int primeIndex; // last prime used
 
 	private int nextPrime(int p) {
@@ -43,6 +42,7 @@ public class MySet {
 
 	// return the hash function value for k
 	private int hash(Integer k) {
+
 		return Math.abs(k.hashCode() % tableSize);
 	}
 
@@ -50,7 +50,7 @@ public class MySet {
 	// current table. the table size should remain prime
 	private void resize() {
 		primeIndex++;
-		tableSize = nextPrime(primeIndex);
+		tableSize = primes[primeIndex];
 
 		Node tableTemp[] = table;
 		table = new Node[tableSize];
@@ -71,11 +71,13 @@ public class MySet {
 		while (currNode != null) {
 			if (currNode.element == e) {
 				return true;
+			} else {
+				currNode = currNode.next;
 			}
-			currNode = currNode.next;
 		}
 
 		return false;
+
 	}
 
 	// if e is not in the set add e to the set otherwise the set does not change
@@ -86,23 +88,15 @@ public class MySet {
 		}
 
 		int index = hash(e);
-		Node currNode = table[index];
-		table[index] = new Node(e, currNode);
+		table[index] = new Node(e, table[index]);
 		numElements++;
 
 		if (numElements > 2 * tableSize) {
+			System.out.println("num of element " + numElements);
+			System.out.println("Element " + e);
 			resize();
 		}
 	}
-
-	public int getTableSize() {
-		return this.tableSize;
-	}
-
-	public int getNumElements() {
-		return this.numElements;
-	}
-
 
 	// returns a string representation for the set
 	// the string representation of the set is { followed by a comma delimiter list
@@ -160,7 +154,6 @@ public class MySet {
 			if (currentNode.next != null) {
 				// what should the currentNode be?
 				currentNode = currentNode.next;
-				rVal = currentNode.element;
 			} else {
 				// No more elements in the current bucket
 				// I need to get the next bucket
@@ -170,6 +163,7 @@ public class MySet {
 
 			return rVal;
 		}
+
 	}
 
 	public Iterator<Integer> iterator() {
@@ -195,6 +189,7 @@ public class MySet {
 		testSet.addElement(16);
 		testSet.addElement(19);
 
-		System.out.println(testSet.getTableSize());
+		System.out.println(testSet.toString());
 	}
+
 }
