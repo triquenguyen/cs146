@@ -3,7 +3,18 @@ package dynamic;
 public class MinSumPath {
 
 	public static int minSumPathMemo(int triangle[][]) {
-		return 0;
+		return minSumHelper(triangle, 0, 0);
+	}
+
+	public static int minSumHelper(int triangle[][], int row, int col) {
+		if (row >= triangle.length) {
+			return 0;
+		}
+
+		int sameColSum = minSumHelper(triangle, row + 1, col);
+		int nextColSum = minSumHelper(triangle, row + 1, col + 1);
+
+		return Math.min(sameColSum, nextColSum) + triangle[row][col];
 	}
 
 	public static int minSumPathBottomUp(int triangle[][]) {
@@ -20,6 +31,7 @@ public class MinSumPath {
 
 	public static void main(String[] args) {
 		int[][] triangle = new int[][] { { 2 }, { 3, 4 }, { 6, 5, 7 }, { 4, 1, 8, 3 } };
+		System.out.println(minSumPathMemo(triangle));
 		System.out.println(minSumPathBottomUp(triangle));
 	}
 }

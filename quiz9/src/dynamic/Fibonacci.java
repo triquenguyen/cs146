@@ -13,15 +13,12 @@ public class Fibonacci {
 		if (fibs[n] >= 0) {
 			return fibs[n];
 		}
-
 		if (n == 0) {
 			return 0;
 		}
-
 		if (n == 1) {
 			return 1;
 		}
-
 		fibs[n] = fibHelper(n - 1, fibs) + fibHelper(n - 2, fibs);
 		return fibs[n];
 	}
