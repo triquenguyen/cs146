@@ -35,6 +35,22 @@ public class EditDistance {
 		Path [][] distances = new Path[n+1][m+1];
 		distances[0][0] = new Path('-','-',0,Operation.MATCH,null);
 		
+		for (int i = 1; i <= n; i++) {
+			distances[i][0].cost = distances[i-1][0].cost + DELETE_COST;
+		}
+
+		for (int j = 1; j <= m; j++) {
+			distances[0][j].cost = distances[0][j-1].cost + INSERT_COST;
+		}
+
+		for (int i = 1; i <= n; i++) {
+			for (int j = 1; j <= m; j++) {
+				int min1 = Math.min(distances[i-1][j].cost + DELETE_COST, distances[i][j-1].cost + INSERT_COST);
+				int min2 = Math.min(distances[i-1][j].cost + DELETE_COST, distances[i-1][j-1].cost + MISMATCH_COST);
+				distances[i][j].cost = Math.min(min1, min2);
+			}
+		}
+		
 		return distances[n][m];
 	}
 	
@@ -50,5 +66,9 @@ public class EditDistance {
 		}
 		return s;
 	}
+	public static void main(String[] args) {
+		
+	}
     
+	
 }
