@@ -84,7 +84,8 @@ public class RBTree {
 		// Loop through the tree to look for the inserting position for node z
 		while (x != null) {
 			y = x;
-			if (z.data < x.data) {	// Go to the left subtree when z is smaller than the parent node, work the same with right subtree
+			if (z.data < x.data) { // Go to the left subtree when z is smaller than the parent node, work the same
+															// with right subtree
 				x = x.left;
 			} else if (z.data > x.data) {
 				x = x.right;
@@ -144,6 +145,24 @@ public class RBTree {
 		root.color = Color.BLACK; // recolor the root node to black
 	}
 
+	public int height() {
+		int height = 0;
+		
+		Stack<Node> nodeStack = new Stack<>();
+		nodeStack.push(root);
+		while (!nodeStack.isEmpty()) {
+			Node node = nodeStack.pop();
+			if (node.left != null) {
+				nodeStack.push(node.left);
+			} 
+			if (node.right != null) {
+				nodeStack.push(node.right);
+			}
+			height++;
+		}
+		return height;
+	}
+
 	/*
 	 * This method should return a string representation of the tree from an in
 	 * order traversal
@@ -190,8 +209,9 @@ public class RBTree {
 		testTree.insert(6);
 		testTree.insert(9);
 		testTree.insert(10);
-		
+
 		String result = testTree.toString();
 		System.out.println(result);
+
 	}
 }

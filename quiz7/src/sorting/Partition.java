@@ -55,11 +55,11 @@ public class Partition {
 				j--;
 			} while (arr[j] > pivot);
 
-			if (i >= j) {
+			if (i < j) {
+				swap(arr, i, j);
+			} else {
 				return j;
 			}
-
-			swap(arr, i, j);
 		}
 	}
 

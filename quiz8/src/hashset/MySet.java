@@ -42,7 +42,6 @@ public class MySet {
 
 	// return the hash function value for k
 	private int hash(Integer k) {
-
 		return Math.abs(k.hashCode() % tableSize);
 	}
 
@@ -75,9 +74,7 @@ public class MySet {
 				currNode = currNode.next;
 			}
 		}
-
 		return false;
-
 	}
 
 	// if e is not in the set add e to the set otherwise the set does not change
@@ -88,6 +85,7 @@ public class MySet {
 		}
 
 		int index = hash(e);
+		System.out.println(index);
 		table[index] = new Node(e, table[index]);
 		numElements++;
 
@@ -160,10 +158,8 @@ public class MySet {
 				currentList++;
 				nextList();
 			}
-
 			return rVal;
 		}
-
 	}
 
 	public Iterator<Integer> iterator() {
@@ -173,22 +169,18 @@ public class MySet {
 
 	public static void main(String[] args) {
 		MySet testSet = new MySet(6);
-		testSet.addElement(4);
-		testSet.addElement(2);
-		testSet.addElement(3);
-		testSet.addElement(1);
-		testSet.addElement(6);
-		testSet.addElement(7);
-		testSet.addElement(5);
-		testSet.addElement(8);
-		testSet.addElement(17);
-		testSet.addElement(51);
-		testSet.addElement(18);
-		testSet.addElement(23);
-		testSet.addElement(12);
-		testSet.addElement(16);
-		testSet.addElement(19);
+		// for(int i = 0;i<=14;i++) {
+		// testSet.addElement(i);
+		// }
 
+		testSet.addElement(1);
+		testSet.addElement(3);
+		testSet.addElement(8);
+		testSet.addElement(7);
+		testSet.addElement(2);
+		testSet.addElement(13);
+		testSet.addElement(0);
+		testSet.addElement(14);
 		System.out.println(testSet.toString());
 	}
 

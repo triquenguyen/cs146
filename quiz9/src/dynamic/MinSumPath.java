@@ -30,7 +30,7 @@ public class MinSumPath {
 	}
 
 	public static void main(String[] args) {
-		int[][] triangle = new int[][] { { 2 }, { 3, 4 }, { 6, 5, 7 }, { 4, 1, 8, 3 } };
+		int[][] triangle = new int[][] { { 2 }, { 3, 4 }, { 6, 5, 7 }, { 4, 1, 8, 3 }, { 4, 4, 8, 3, 0 } };
 		System.out.println(minSumPathMemo(triangle));
 		System.out.println(minSumPathBottomUp(triangle));
 	}

@@ -344,7 +344,7 @@ public class RBTree {
 		Stack<Node> stackNode = new Stack<>();
 
 		public RBTreeInOrderIterator(Node root) {
-			// Push all the left nodes of root into the stack
+			// Push all the left nodes of root into the stack	
 			getSubtree(root);
 		}
 
@@ -408,7 +408,6 @@ public class RBTree {
 				getSubtree(root.right);
 				getSubtree(root.left);
 			}
-
 		}
 
 		public void getSubtree(Node node) {
@@ -440,21 +439,15 @@ public class RBTree {
 
 	public static void main(String[] args) {
 		RBTree testTree = new RBTree();
+
 		testTree.insert(2);
 		testTree.insert(1);
 		testTree.insert(3);
-		testTree.insert(3);
 		testTree.insert(0);
 		testTree.insert(5);
-		testTree.insert(22);
-		testTree.insert(6);
-		testTree.insert(9);
-		testTree.insert(10);
+		testTree.insert(4);
 		testTree.insert(7);
-		testTree.insert(123);
-		testTree.insert(1000);
-		testTree.insert(1234);
-		testTree.insert(156);
+
 
 		System.out.println(testTree.toString());
 		System.out.println("Height: " + testTree.height());
@@ -480,6 +473,9 @@ public class RBTree {
 			System.out.print(node.data + " ");
 		}
 		System.out.println();
-
 	}
 }
+
+
+// Do optimal solution
+// Know how to point out the thing

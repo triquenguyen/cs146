@@ -36,4 +36,13 @@ public class EditDistanceTest {
 		assertEquals(3,p.cost);
 	}
 
+	// test 1: 
+	@Test
+	public void test1() {
+		String s1 = "hello";
+		String s2 = "olleh";
+		Path p = EditDistance.minEditDistance(s1,s2);
+		assertEquals(6,p.cost);
+	}
+
 }
