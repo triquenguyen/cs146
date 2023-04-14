@@ -119,8 +119,8 @@ public class EditDistance {
 	}
 
 	public static void main(String[] args) {
-		String source = "food";
-		String target = "money";
+		String source = "thisissorandom";
+		String target = "ihopethereisnomatch";
 		Path testPath = minEditDistance(source, target);
 
 		System.out.println(printPath(testPath));
