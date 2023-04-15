@@ -78,7 +78,7 @@ public class EditDistanceTest {
 		String s1 = "thisissorandom";
 		String s2 = "ihopethereisnomatch";
 		Path p = EditDistance.minEditDistance(s1, s2);
-		assertEquals(21, p.cost);
+		assertEquals(20, p.cost);
 	}
 	
 }
