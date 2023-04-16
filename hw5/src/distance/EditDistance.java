@@ -56,7 +56,6 @@ public class EditDistance {
 			for (int j = 1; j <= m; j++) {
 				int deleteCost = distances[i - 1][j].cost + DELETE_COST;
 				int insertCost = distances[i][j - 1].cost + INSERT_COST;
-
 				int cost = source.charAt(i - 1) == target.charAt(j - 1) ? 0 : MISMATCH_COST;
 				int subCost = distances[i - 1][j - 1].cost + cost;
 				int minCost = min(deleteCost, insertCost, subCost);
