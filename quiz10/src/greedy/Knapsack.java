@@ -70,6 +70,7 @@ public class Knapsack {
         items.add(item5);
         items.add(item4);
 
+    
         ArrayList<Double> result = fractionalKnapsack(items, 100);
 
         result.forEach(res -> System.out.println(res));
