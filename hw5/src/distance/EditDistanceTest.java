@@ -80,5 +80,4 @@ public class EditDistanceTest {
 		Path p = EditDistance.minEditDistance(s1, s2);
 		assertEquals(20, p.cost);
 	}
-	
 }
