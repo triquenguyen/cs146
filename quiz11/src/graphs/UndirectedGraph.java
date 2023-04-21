@@ -159,6 +159,24 @@ public class UndirectedGraph {
 		ArrayList<Integer> bfs = new ArrayList<>();
 		Queue<Vertex> queue = new LinkedList<>();
 
+		Vertex s = findVertex(initial);
+		queue.offer(s); // mark s gray
+		visited.add(s.val); // mark s black
+
+		while (!queue.isEmpty()) {
+			Vertex u = queue.poll();
+			bfs.add(u.val);
+			Node edge = u.edge;
+			while (edge != null) {
+				Vertex v = edge.vert;
+				if (!visited.contains(v.val)) {
+					visited.add(v.val);
+					queue.offer(v);
+				}
+				edge = edge.next;
+			}
+		}
+
 		return bfs;
 
 	}
@@ -183,6 +201,8 @@ public class UndirectedGraph {
 		testGraph.addEdge(0, 1);
 		testGraph.addEdge(1, 2);
 		testGraph.addEdge(2, 3);
+
+		ArrayList<Integer> bfsList = breadthFirstSearch(0);
 		System.out.println(testGraph.toString());
 	}
 
