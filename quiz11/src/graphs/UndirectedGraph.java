@@ -71,21 +71,20 @@ public class UndirectedGraph {
 		while (currVertex != null) {
 			if (currVertex.val == value) {
 				return false;
+			}
+
+			if (currVertex.val < value) {
+				prevVertex = currVertex;
+				currVertex = currVertex.next;
 			} else {
-				if (currVertex.val < value) {
-					prevVertex = currVertex;
-					currVertex = currVertex.next;
-				} else {
-					Vertex newVertex = new Vertex(value, currVertex);
-					prevVertex.next = newVertex;
-					addEdge(prevVertex.val, value);
-					break;
-				}
+				Vertex newVertex = new Vertex(value, currVertex);
+				prevVertex.next = newVertex;
+				return true;
 			}
 		}
 
+		prevVertex.next = new Vertex(value, null);
 		return true;
-
 	}
 
 	public boolean addEdge(int val1, int val2) {
@@ -97,18 +96,41 @@ public class UndirectedGraph {
 		// If the edge already exists return false
 		// Note that this is an undirected graph so you should create an edge from
 		// val1 to val2 and val2 to val1.
-		
+
 		Vertex vertex1 = findVertex(val1);
 		Vertex vertex2 = findVertex(val2);
+		Node edge1 = vertex1.edge;
 
-		if (vertex1.edge != null && vertex2.edge != null) {
-			return false;
+		while (edge1 != null) {
+			if (edge1.vert == vertex2) {
+				return false;
+			}
+			edge1 = edge1.next;
 		}
 
-		vertex1.edge = new Node(vertex1, vertex2.edge);
-		vertex2.edge = new Node(vertex2, vertex1.edge);
-		
+		vertex1.edge = addEdgeNode(vertex1.edge, vertex2);
+		vertex2.edge = addEdgeNode(vertex2.edge, vertex1);
+
 		return true;
+	}
+
+	public Node addEdgeNode(Node node, Vertex vertex) {
+		Node newNode = new Node(vertex, null);
+
+		if (node == null || node.vert.val > vertex.val) {
+			newNode.next = node;
+			return newNode;
+		}
+
+		Node currNode = node;
+
+		while (currNode.next != null && currNode.next.vert.val < vertex.val) {
+			currNode = currNode.next;
+		}
+
+		newNode.next = currNode.next;
+		currNode.next = newNode;
+		return node;
 	}
 
 	public Vertex findVertex(int val) {
@@ -154,13 +176,14 @@ public class UndirectedGraph {
 
 	public static void main(String[] args) {
 		UndirectedGraph testGraph = new UndirectedGraph();
-		// testGraph.addVertex(0);
-		// testGraph.addVertex(1);
-		// testGraph.addVertex(2);
-		// testGraph.addVertex(3);
-		System.out.println(testGraph.addVertex(0));
-		System.out.println(testGraph.addVertex(1));
-		System.out.println(testGraph.addVertex(1));
+		testGraph.addVertex(1);
+		testGraph.addVertex(0);
+		testGraph.addVertex(2);
+		testGraph.addVertex(3);
+		testGraph.addEdge(0, 1);
+		testGraph.addEdge(1, 2);
+		testGraph.addEdge(2, 3);
+		System.out.println(testGraph.toString());
 	}
 
 }
