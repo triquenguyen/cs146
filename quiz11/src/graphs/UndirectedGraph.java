@@ -37,7 +37,7 @@ public class UndirectedGraph {
 		}
 	}
 
-	Vertex vertices;// pointer to first vertex in the graph (vertex with the smallest val)
+	static Vertex vertices;// pointer to first vertex in the graph (vertex with the smallest val)
 
 	public UndirectedGraph() {
 		vertices = null;
@@ -55,35 +55,30 @@ public class UndirectedGraph {
 			return true;
 		}
 
-		if (vertices.val > value) {
-			Vertex nextVertex = vertices;
-			vertices = new Vertex(value, nextVertex);
-			return true;
-		}
-
 		if (vertices.val == value) {
 			return false;
 		}
 
-		Vertex currVertex = vertices.next;
-		Vertex prevVertex = vertices;
+		Vertex currVertex = vertices;
+		Vertex prevVertex = null;
 
-		while (currVertex != null) {
-			if (currVertex.val == value) {
-				return false;
-			}
-
-			if (currVertex.val < value) {
-				prevVertex = currVertex;
-				currVertex = currVertex.next;
-			} else {
-				Vertex newVertex = new Vertex(value, currVertex);
-				prevVertex.next = newVertex;
-				return true;
-			}
+		while (currVertex != null && currVertex.val < value) {
+			prevVertex = currVertex;
+			currVertex = currVertex.next;
 		}
 
-		prevVertex.next = new Vertex(value, null);
+		if (currVertex != null && currVertex.val == value) {
+			return false;
+		}
+		
+		Vertex newVertex = new Vertex(value, currVertex);
+
+		if (prevVertex != null) {
+			prevVertex.next = newVertex;
+		} else {
+			vertices = newVertex;
+		}
+		
 		return true;
 	}
 
@@ -133,19 +128,17 @@ public class UndirectedGraph {
 		return node;
 	}
 
-	public Vertex findVertex(int val) {
+	public static Vertex findVertex(int val) {
 		Vertex currVertex = vertices;
 
-		while (currVertex != null) {
-			if (currVertex.val == val) {
-				break;
-			}
+		while (currVertex != null && currVertex.val != val) {
 			currVertex = currVertex.next;
 		}
+
 		return currVertex;
 	}
 
-	public ArrayList<Integer> breadthFirstSearch(int initial) {
+	public static ArrayList<Integer> breadthFirstSearch(int initial) {
 		// This method should return an ArrayList of integers corresponding to
 		// the values associated with the vertices in the graph visited in breadth first
 		// order
