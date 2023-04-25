@@ -4,7 +4,7 @@ import java.util.*;
 
 public class UndirectedGraph {
 
-	static class Vertex {
+	class Vertex {
 		int val;
 		Vertex next; // next vertex in the list
 		Node edge; // pointer to first edge
@@ -128,7 +128,7 @@ public class UndirectedGraph {
 		return node;
 	}
 
-	public static Vertex findVertex(int val) {
+	public Vertex findVertex(int val) {
 		Vertex currVertex = vertices;
 
 		while (currVertex != null && currVertex.val != val) {
@@ -138,7 +138,7 @@ public class UndirectedGraph {
 		return currVertex;
 	}
 
-	public static ArrayList<Integer> breadthFirstSearch(int initial) {
+	public ArrayList<Integer> breadthFirstSearch(int initial) {
 		// This method should return an ArrayList of integers corresponding to
 		// the values associated with the vertices in the graph visited in breadth first
 		// order
@@ -186,17 +186,27 @@ public class UndirectedGraph {
 	}
 
 	public static void main(String[] args) {
-		UndirectedGraph testGraph = new UndirectedGraph();
-		testGraph.addVertex(1);
-		testGraph.addVertex(0);
-		testGraph.addVertex(2);
-		testGraph.addVertex(3);
-		testGraph.addEdge(0, 1);
-		testGraph.addEdge(1, 2);
-		testGraph.addEdge(2, 3);
+		UndirectedGraph test = new UndirectedGraph();
+		test.addVertex(4);
+		test.addVertex(14);
+		test.addVertex(13);
+		test.addVertex(4);
+		test.addVertex(9);
+		test.addVertex(1);
 
-		ArrayList<Integer> bfsList = breadthFirstSearch(0);
-		System.out.println(testGraph.toString());
-	}
+		test.addEdge(4, 1);
+		test.addEdge(1,4);
+		test.addEdge(1,9);
+		test.addEdge(9,13);
+		test.addEdge(13,14);
+		test.addEdge(4,9);
+		test.addEdge(14,4);
+		
+		ArrayList<Integer> testlist = test.breadthFirstSearch(4);
+		for(int i = 0; i < testlist.size(); ++i) {
+				System.out.print(testlist.get(i) + " ");
+		}
+		System.out.println("ToString: " + test);
+}
 
 }
