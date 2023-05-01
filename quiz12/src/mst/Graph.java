@@ -95,8 +95,24 @@ public class Graph {
 	}
 
 	public boolean connected() {
+		Vertex initialVertex = vertices.first();
+		Set<Vertex> visited = new HashSet<>();
 
-		return false;
+		depthFirstSearch(initialVertex, visited);
+
+		return visited.size() == vertices.size();
+	}
+
+	public void depthFirstSearch(Vertex vertex, Set<Vertex> visited) {
+		visited.add(vertex);
+
+		for (Edge edge : edges) {
+			if (edge.from == vertex && !visited.contains(edge.to)) {
+				depthFirstSearch(edge.to, visited);
+			} else if (edge.to == vertex && !visited.contains(edge.from)) {
+				depthFirstSearch(edge.from, visited);
+			}
+		}
 	}
 
 	public Graph kruskalMST() {
@@ -115,37 +131,46 @@ public class Graph {
 			}
 		}
 
-		return resultGraph;
+		return new Graph(vertices, resultGraph.edges);
 	}
 
 	public static void main(String[] args) {
 		TreeSet<Vertex> vertices = new TreeSet<>();
+		Vertex vertex1 = new Vertex(1);
+		Vertex vertex2 = new Vertex(2);
+		Vertex vertex3 = new Vertex(3);
+		Vertex vertex4 = new Vertex(4);
+		Vertex vertex5 = new Vertex(5);
+		Vertex vertex6 = new Vertex(6);
+		Vertex vertex7 = new Vertex(7);
+		Vertex vertex8 = new Vertex(8);
 
-		vertices.add(new Vertex(0));
-		vertices.add(new Vertex(3));
-		vertices.add(new Vertex(2));
-		vertices.add(new Vertex(5));
-		vertices.add(new Vertex(6));
-		vertices.add(new Vertex(1));
-		vertices.add(new Vertex(4));
-		vertices.add(new Vertex(7));
+		vertices.add(vertex1);
+		vertices.add(vertex2);
+		vertices.add(vertex3);
+		vertices.add(vertex4);
+		vertices.add(vertex5);
+		vertices.add(vertex6);
+		vertices.add(vertex7);
+		vertices.add(vertex8);
 
 		ArrayList<Edge> edges = new ArrayList<>();
-		edges.add(new Edge(new Vertex(0), new Vertex(3), 0));
-		edges.add(new Edge(new Vertex(1), new Vertex(7), 2));
-		edges.add(new Edge(new Vertex(2), new Vertex(3), 1));
-		edges.add(new Edge(new Vertex(5), new Vertex(1), 3));
-		edges.add(new Edge(new Vertex(6), new Vertex(7), 4));
-		edges.add(new Edge(new Vertex(4), new Vertex(5), 1));
-		edges.add(new Edge(new Vertex(1), new Vertex(2), 3));
-		edges.add(new Edge(new Vertex(2), new Vertex(7), 4));
+		edges.add(new Edge(vertex1, vertex2, 0));
+		edges.add(new Edge(vertex6, vertex8, 2));
+		edges.add(new Edge(vertex3, vertex2, 1));
+		edges.add(new Edge(vertex4, vertex6, 3));
+		edges.add(new Edge(vertex5, vertex8, 4));
+		edges.add(new Edge(vertex5, vertex4, 1));
+		edges.add(new Edge(vertex6, vertex3, 3));
+		edges.add(new Edge(vertex6, vertex7, 3));
 
 		Graph testGraph = new Graph(vertices, edges);
 
 		Graph testMST = testGraph.kruskalMST();
 
+		System.out.println(testMST.connected());
+
 		System.out.println(testMST.vertices);
 		System.out.println(testMST.edges);
 	}
-
 }
