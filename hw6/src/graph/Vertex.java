@@ -35,7 +35,5 @@ public class Vertex implements Comparable<Vertex>{
 	
 	public int compareTo(Vertex v) {
 		return value - v.value;
-	}
-
-	
+	}	
 }
