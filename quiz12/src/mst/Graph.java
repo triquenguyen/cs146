@@ -107,9 +107,9 @@ public class Graph {
 		visited.add(vertex);
 
 		for (Edge edge : edges) {
-			if (edge.from == vertex && !visited.contains(edge.to)) {
+			if (edge.from.equals(vertex) && !visited.contains(edge.to)) {
 				depthFirstSearch(edge.to, visited);
-			} else if (edge.to == vertex && !visited.contains(edge.from)) {
+			} else if (edge.to.equals(vertex) && !visited.contains(edge.from)) {
 				depthFirstSearch(edge.from, visited);
 			}
 		}
