@@ -4,7 +4,7 @@ import java.util.*;
 
 public interface Graph {
 	
-	TreeMap<Integer, Vertex> getVertices();
+	TreeSet<Vertex> getVertices();
 	ArrayList<Integer> depthFirstSearch();
 	ArrayList<Integer> topologicalSortDFS();
 	ArrayList<Integer> topologicalSortQueue();
