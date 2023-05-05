@@ -14,6 +14,7 @@ import java.util.Map.Entry;
 
 public class GraphImp implements Graph {
   public Map<Vertex, ArrayList<Edge>> graph;
+  private int time = 0;
 
   TreeSet<Vertex> vertices;
   ArrayList<Edge> edges;
@@ -34,30 +35,42 @@ public class GraphImp implements Graph {
     Stack<Vertex> upcoming = new Stack<>();
 
     for (Vertex vertex : vertices) {
-      if (!visited.contains(vertex)) {
-        visited.add(vertex);
-        upcoming.push(vertex);
-        vertex.color = Color.GREY;
-        vertex.discoveryTime++;
-      }
+      DFSVisit(vertex, visited, upcoming, result, time);
+      System.out.println(vertex.discoveryTime);
+      System.out.println(vertex.finishTime);
 
-      while (!upcoming.empty()) {
-        Vertex visitedVertex = upcoming.pop();
-        vertex.color = Color.BLACK;
-        result.add(visitedVertex.value);
-
-        for (Edge edge : edges) {
-          if (edge.from.equals(visitedVertex) && !visited.contains(edge.to)) {
-            visited.add(edge.to);
-            upcoming.push(edge.to);
-            edge.to.color = Color.GREY;
-            edge.to.discoveryTime++;
-          }
-        }
-      }
     }
 
     return result;
+  }
+
+  public void DFSVisit(Vertex vertex, Set<Vertex> visited, Stack<Vertex> upcoming, ArrayList<Integer> result,
+      int time) {
+    time+=1;
+    vertex.discoveryTime = time;
+    if (!visited.contains(vertex)) {
+      visited.add(vertex);
+      upcoming.push(vertex);
+      vertex.color = Color.GREY;
+    }
+
+    while (!upcoming.empty()) {
+      Vertex visitedVertex = upcoming.pop();
+      vertex.color = Color.BLACK;
+      result.add(visitedVertex.value);
+
+      for (Edge edge : edges) {
+        if (edge.from.equals(visitedVertex) && !visited.contains(edge.to)) {
+          edge.to.p = visitedVertex;
+          visited.add(edge.to);
+          upcoming.push(edge.to);
+          edge.to.color = Color.GREY;
+        }
+      }
+
+      time += 1;
+      vertex.finishTime = time;
+    }
   }
 
   @Override
@@ -67,8 +80,8 @@ public class GraphImp implements Graph {
 
   // Yes this method can detect a cycle presents in the graph
   // It is because when we manage vertex adjacent to the vertex v
-  // using the inDegree, if a cycle presents, those vertexes can't be 
-  // enqueued or cancel out because they are pointing at each other, 
+  // using the inDegree, if a cycle presents, those vertexes can't be
+  // enqueued or cancel out because they are pointing at each other,
   // causing the inDegree values stay at 1s and the queue only enqueues
   // the vertex with inDegree value of 0
 
@@ -109,7 +122,6 @@ public class GraphImp implements Graph {
           }
         }
       }
-
     }
 
     if (result.size() != vertices.size()) {
@@ -150,11 +162,9 @@ public class GraphImp implements Graph {
     edges.add(new Edge(vertex6, vertex3, 3));
     edges.add(new Edge(vertex6, vertex7, 3));
 
-
-
     GraphImp testGraph = new GraphImp(vertices, edges);
 
-    System.out.println(testGraph.topologicalSortQueue());
+    System.out.println(testGraph.depthFirstSearch());
   }
 
   @Override
