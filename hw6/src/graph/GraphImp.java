@@ -2,6 +2,7 @@ package graph;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
@@ -14,12 +15,27 @@ import java.util.Map.Entry;
 
 public class GraphImp implements Graph {
   public Map<Vertex, ArrayList<Edge>> graph;
-  private int time = 0;
 
   TreeSet<Vertex> vertices;
   ArrayList<Edge> edges;
 
   public GraphImp(TreeSet<Vertex> vertices, ArrayList<Edge> edges) {
+    graph = new HashMap<>();
+
+    for (Vertex vertex : vertices) {
+      graph.put(vertex, new ArrayList<>());
+    }
+
+    for (Edge edge : edges) {
+      graph.get(edge.from).add(edge);
+    }
+
+    edges.sort((edge1, edge2) -> edge1.to.compareTo(edge2.to));
+
+    for (ArrayList<Edge> edgeList : graph.values()) {
+      edgeList.sort((edge1, edge2) -> edge1.to.compareTo(edge2.to));
+    }
+
     this.vertices = vertices;
     this.edges = edges;
   }
@@ -30,51 +46,60 @@ public class GraphImp implements Graph {
 
   @Override
   public ArrayList<Integer> depthFirstSearch() {
+    for (Vertex vertex : vertices) {
+      vertex.color = Color.WHITE;
+      vertex.p = null;
+    }
+
+    int time = 0;
     ArrayList<Integer> result = new ArrayList<>();
-    Set<Vertex> visited = new HashSet<>();
     Stack<Vertex> upcoming = new Stack<>();
 
     for (Vertex vertex : vertices) {
-      DFSVisit(vertex, visited, upcoming, result, time);
-      System.out.println(vertex.discoveryTime);
-      System.out.println(vertex.finishTime);
+      if (vertex.color == Color.WHITE) {
+        time++;
+        vertex.discoveryTime = time;
+        upcoming.push(vertex);
 
-    }
+        while (!upcoming.isEmpty()) {
+          Vertex discoveredVertex = upcoming.peek();
+          boolean isDeadend = true;
 
-    return result;
-  }
+          for (Edge edge : graph.get(discoveredVertex)) {
+            Vertex upcomingVertex = edge.to;
 
-  public void DFSVisit(Vertex vertex, Set<Vertex> visited, Stack<Vertex> upcoming, ArrayList<Integer> result,
-      int time) {
-    time+=1;
-    vertex.discoveryTime = time;
-    if (!visited.contains(vertex)) {
-      visited.add(vertex);
-      upcoming.push(vertex);
-      vertex.color = Color.GREY;
-    }
+            if (upcomingVertex.color == Color.WHITE) {
+              time++;
+              upcomingVertex.color = Color.GREY;
+              upcomingVertex.discoveryTime = time;
+              upcomingVertex.p = discoveredVertex;
+              upcoming.push(upcomingVertex);
+              isDeadend = false;
+              break;
+            }
+          }
 
-    while (!upcoming.empty()) {
-      Vertex visitedVertex = upcoming.pop();
-      vertex.color = Color.BLACK;
-      result.add(visitedVertex.value);
+          if (isDeadend) {
+            upcoming.pop();
+            time++;
+            discoveredVertex.finishTime = time;
+            discoveredVertex.color = Color.BLACK;
+            result.add(discoveredVertex.value);
+          }
 
-      for (Edge edge : edges) {
-        if (edge.from.equals(visitedVertex) && !visited.contains(edge.to)) {
-          edge.to.p = visitedVertex;
-          visited.add(edge.to);
-          upcoming.push(edge.to);
-          edge.to.color = Color.GREY;
         }
+
       }
 
-      time += 1;
-      vertex.finishTime = time;
+      System.out.println(vertex + " " + vertex.discoveryTime + " / " +
+          vertex.finishTime);
     }
+    return result;
   }
 
   @Override
   public ArrayList<Integer> topologicalSortDFS() {
+
     return new ArrayList<>(null);
   }
 
@@ -110,14 +135,12 @@ public class GraphImp implements Graph {
       result.add(visitedVertex.value);
       visited.add(visitedVertex);
 
-      for (Edge edge : edges) {
-        if (edge.from.equals(visitedVertex)) {
-          for (Vertex vertex : vertices) {
-            if (edge.to.equals(vertex)) {
-              vertex.inDegree -= 1;
-              if (vertex.inDegree == 0) {
-                vertexQueue.offer(vertex);
-              }
+      for (Edge edge : graph.get(visitedVertex)) {
+        for (Vertex vertex : vertices) {
+          if (edge.to.equals(vertex)) {
+            vertex.inDegree -= 1;
+            if (vertex.inDegree == 0) {
+              vertexQueue.offer(vertex);
             }
           }
         }
@@ -153,18 +176,24 @@ public class GraphImp implements Graph {
     vertices.add(vertex8);
 
     ArrayList<Edge> edges = new ArrayList<>();
-    edges.add(new Edge(vertex2, vertex1, 0));
-    edges.add(new Edge(vertex6, vertex8, 2));
-    edges.add(new Edge(vertex3, vertex2, 1));
-    edges.add(new Edge(vertex4, vertex6, 3));
-    edges.add(new Edge(vertex5, vertex8, 4));
-    edges.add(new Edge(vertex5, vertex4, 1));
+    edges.add(new Edge(vertex1, vertex2, 0));
+    edges.add(new Edge(vertex2, vertex3, 0));
+    edges.add(new Edge(vertex3, vertex4, 2));
+    edges.add(new Edge(vertex2, vertex6, 3));
+    edges.add(new Edge(vertex1, vertex6, 4));
+    edges.add(new Edge(vertex1, vertex7, 3));
+    edges.add(new Edge(vertex6, vertex8, 3));
+    edges.add(new Edge(vertex7, vertex8, 3));
+    edges.add(new Edge(vertex5, vertex4, 3));
+    edges.add(new Edge(vertex8, vertex5, 3));
+    edges.add(new Edge(vertex7, vertex6, 3));
     edges.add(new Edge(vertex6, vertex3, 3));
-    edges.add(new Edge(vertex6, vertex7, 3));
+    edges.add(new Edge(vertex6, vertex4, 3));
 
     GraphImp testGraph = new GraphImp(vertices, edges);
 
     System.out.println(testGraph.depthFirstSearch());
+
   }
 
   @Override
