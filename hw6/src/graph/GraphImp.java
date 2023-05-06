@@ -2,6 +2,8 @@ package graph;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -29,8 +31,6 @@ public class GraphImp implements Graph {
     for (Edge edge : edges) {
       graph.get(edge.from).add(edge);
     }
-
-    edges.sort((edge1, edge2) -> edge1.to.compareTo(edge2.to));
 
     for (ArrayList<Edge> edgeList : graph.values()) {
       edgeList.sort((edge1, edge2) -> edge1.to.compareTo(edge2.to));
@@ -86,21 +86,25 @@ public class GraphImp implements Graph {
             discoveredVertex.color = Color.BLACK;
             result.add(discoveredVertex.value);
           }
-
         }
-
       }
-
-      System.out.println(vertex + " " + vertex.discoveryTime + " / " +
-          vertex.finishTime);
     }
+
     return result;
   }
 
   @Override
   public ArrayList<Integer> topologicalSortDFS() {
 
-    return new ArrayList<>(null);
+    ArrayList<Integer> dfs = depthFirstSearch();
+
+    LinkedList<Integer> result = new LinkedList<>();
+
+    for (int finishTime : dfs) {
+      result.addFirst(finishTime);
+    }
+
+    return new ArrayList<>(result);
   }
 
   // Yes this method can detect a cycle presents in the graph
@@ -114,7 +118,10 @@ public class GraphImp implements Graph {
   public ArrayList<Integer> topologicalSortQueue() {
     ArrayList<Integer> result = new ArrayList<>();
     Queue<Vertex> vertexQueue = new LinkedList<>();
-    Set<Vertex> visited = new HashSet<>();
+
+    for (Vertex vertex : vertices) {
+      vertex.inDegree = 0;
+    }
 
     for (Vertex vertex : vertices) {
       for (Edge edge : edges) {
@@ -133,7 +140,6 @@ public class GraphImp implements Graph {
     while (!vertexQueue.isEmpty()) {
       Vertex visitedVertex = vertexQueue.poll();
       result.add(visitedVertex.value);
-      visited.add(visitedVertex);
 
       for (Edge edge : graph.get(visitedVertex)) {
         for (Vertex vertex : vertices) {
@@ -193,6 +199,8 @@ public class GraphImp implements Graph {
     GraphImp testGraph = new GraphImp(vertices, edges);
 
     System.out.println(testGraph.depthFirstSearch());
+    System.out.println(testGraph.topologicalSortDFS());
+    System.out.println(testGraph.topologicalSortQueue());
 
   }
 
