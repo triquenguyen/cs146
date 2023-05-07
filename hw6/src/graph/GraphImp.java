@@ -97,11 +97,13 @@ public class GraphImp implements Graph {
   public ArrayList<Integer> topologicalSortDFS() {
 
     ArrayList<Integer> dfs = depthFirstSearch();
+    ArrayList<Vertex> vertexList = new ArrayList<>(graph.keySet());
+    vertexList.sort((vertex1, vertex2) -> vertex2.finishTime - vertex1.finishTime);
 
     LinkedList<Integer> result = new LinkedList<>();
 
-    for (int finishTime : dfs) {
-      result.addFirst(finishTime);
+    for (Vertex vertex : vertexList) {
+      result.add(vertex.value);
     }
 
     return new ArrayList<>(result);
@@ -161,6 +163,79 @@ public class GraphImp implements Graph {
 
   }
 
+  @Override
+  public ArrayList<Integer> shortestPath(int source, int target) {
+    initSingleSource(new Vertex(source));
+    ArrayList<Integer> result = new ArrayList<>();
+    HashMap<Vertex, Integer> queue = new HashMap<>();
+    Set<Vertex> visited = new HashSet<>();
+
+    Vertex targetVertex = null;
+
+    for (Vertex vertex : vertices) {
+      if (vertex.value == target) {
+        targetVertex = vertex;
+      }
+    }
+
+    for (Vertex vertex : vertices) {
+      queue.put(vertex, vertex.discoveryTime);
+    }
+
+    while (!visited.contains(targetVertex)) {
+      Vertex u = extractMin(queue, visited);
+
+      if (u == null) {
+        return new ArrayList<>();
+      }
+
+      visited.add(u);
+
+      for (Edge edge : graph.get(u)) {
+        Vertex v = edge.to;
+
+        if (queue.get(v) > u.discoveryTime + edge.weight) {
+          v.p = u;
+          queue.put(v, u.discoveryTime + edge.weight);
+        }
+      }
+    }
+
+    while (targetVertex != null) {
+      result.add(0, targetVertex.value);
+      targetVertex = targetVertex.p;
+    }    
+     
+    return result;
+  }
+
+  public Vertex extractMin(HashMap<Vertex, Integer> queue, Set<Vertex> visited) {
+    int minDist = Integer.MAX_VALUE;
+    Vertex minDistVertex = null;
+
+    for (Vertex vertex : vertices) {
+      if (!visited.contains(vertex) && queue.get(vertex) < minDist) {
+        minDistVertex = vertex;
+        minDist = queue.get(vertex);
+      }
+    }
+
+    queue.remove(minDistVertex);
+
+    return minDistVertex;
+  }
+
+  public void initSingleSource(Vertex s) {
+    for (Vertex vertex : vertices) {
+      if (vertex.equals(s)) {
+        s.discoveryTime = 0;
+      } else {
+        vertex.discoveryTime = Integer.MAX_VALUE;
+        vertex.p = null;
+      }
+    }
+  }
+
   public static void main(String[] args) {
     TreeSet<Vertex> vertices = new TreeSet<>();
     Vertex vertex1 = new Vertex(1);
@@ -198,15 +273,10 @@ public class GraphImp implements Graph {
 
     GraphImp testGraph = new GraphImp(vertices, edges);
 
-    System.out.println(testGraph.depthFirstSearch());
-    System.out.println(testGraph.topologicalSortDFS());
-    System.out.println(testGraph.topologicalSortQueue());
-
+    // System.out.println(testGraph.depthFirstSearch());
+    // System.out.println(testGraph.topologicalSortDFS());
+    // System.out.println(testGraph.topologicalSortQueue());
+    System.out.println(testGraph.shortestPath(1, 4));
   }
 
-  @Override
-  public ArrayList<Integer> shortestPath(int source, int target) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'shortestPath'");
-  }
 }
