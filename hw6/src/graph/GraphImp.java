@@ -96,7 +96,7 @@ public class GraphImp implements Graph {
   @Override
   public ArrayList<Integer> topologicalSortDFS() {
 
-    ArrayList<Integer> dfs = depthFirstSearch();
+    depthFirstSearch();
     ArrayList<Vertex> vertexList = new ArrayList<>(graph.keySet());
     vertexList.sort((vertex1, vertex2) -> vertex2.finishTime - vertex1.finishTime);
 
@@ -182,11 +182,11 @@ public class GraphImp implements Graph {
       queue.put(vertex, vertex.discoveryTime);
     }
 
-    while (!visited.contains(targetVertex)) {
+    while (queue.size() != 0) {
       Vertex u = extractMin(queue, visited);
 
-      if (u == null) {
-        return new ArrayList<>();
+      if (u.value == target) {
+        break;
       }
 
       visited.add(u);
@@ -195,8 +195,9 @@ public class GraphImp implements Graph {
         Vertex v = edge.to;
 
         if (queue.get(v) > u.discoveryTime + edge.weight) {
+          v.discoveryTime = u.discoveryTime + edge.weight;
           v.p = u;
-          queue.put(v, u.discoveryTime + edge.weight);
+          queue.put(v, v.discoveryTime);
         }
       }
     }
@@ -213,10 +214,10 @@ public class GraphImp implements Graph {
     int minDist = Integer.MAX_VALUE;
     Vertex minDistVertex = null;
 
-    for (Vertex vertex : vertices) {
-      if (!visited.contains(vertex) && queue.get(vertex) < minDist) {
-        minDistVertex = vertex;
-        minDist = queue.get(vertex);
+    for (Map.Entry<Vertex, Integer> entry : queue.entrySet()) {
+      if (entry.getValue() <minDist) {
+        minDist = entry.getValue();
+        minDistVertex = entry.getKey();
       }
     }
 
@@ -274,9 +275,9 @@ public class GraphImp implements Graph {
     GraphImp testGraph = new GraphImp(vertices, edges);
 
     // System.out.println(testGraph.depthFirstSearch());
-    // System.out.println(testGraph.topologicalSortDFS());
+    System.out.println(testGraph.topologicalSortDFS());
     // System.out.println(testGraph.topologicalSortQueue());
-    System.out.println(testGraph.shortestPath(1, 4));
+    System.out.println(testGraph.shortestPath(1, 5));
   }
 
 }
