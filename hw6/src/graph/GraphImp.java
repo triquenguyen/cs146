@@ -160,27 +160,21 @@ public class GraphImp implements Graph {
     }
 
     return result;
-
   }
 
   @Override
   public ArrayList<Integer> shortestPath(int source, int target) {
-    initSingleSource(new Vertex(source));
-    ArrayList<Integer> result = new ArrayList<>();
+    Vertex sourceVertex = findVertex(source);
     HashMap<Vertex, Integer> queue = new HashMap<>();
-    Set<Vertex> visited = new HashSet<>();
 
-    Vertex targetVertex = null;
-
-    for (Vertex vertex : vertices) {
-      if (vertex.value == target) {
-        targetVertex = vertex;
-      }
-    }
-
+    initSingleSource(sourceVertex);
     for (Vertex vertex : vertices) {
       queue.put(vertex, vertex.discoveryTime);
     }
+
+    ArrayList<Integer> result = new ArrayList<>();
+    Set<Vertex> visited = new HashSet<>();
+    Vertex targetVertex = findVertex(target);
 
     while (queue.size() != 0) {
       Vertex u = extractMin(queue, visited);
@@ -188,8 +182,6 @@ public class GraphImp implements Graph {
       if (u.value == target) {
         break;
       }
-
-      visited.add(u);
 
       for (Edge edge : graph.get(u)) {
         Vertex v = edge.to;
@@ -200,14 +192,26 @@ public class GraphImp implements Graph {
           queue.put(v, v.discoveryTime);
         }
       }
+
+      visited.add(u);
     }
 
     while (targetVertex != null) {
       result.add(0, targetVertex.value);
       targetVertex = targetVertex.p;
-    }    
-     
+    }
+
     return result;
+  }
+
+  public Vertex findVertex(int val) {
+    for (Vertex vertex : vertices) {
+      if (vertex.value == val) {
+        return vertex;
+      }
+    }
+
+    return null;
   }
 
   public Vertex extractMin(HashMap<Vertex, Integer> queue, Set<Vertex> visited) {
@@ -215,26 +219,21 @@ public class GraphImp implements Graph {
     Vertex minDistVertex = null;
 
     for (Map.Entry<Vertex, Integer> entry : queue.entrySet()) {
-      if (entry.getValue() <minDist) {
+      if (!visited.contains(entry.getKey()) && entry.getValue() < minDist) {
         minDist = entry.getValue();
         minDistVertex = entry.getKey();
       }
     }
-
-    queue.remove(minDistVertex);
 
     return minDistVertex;
   }
 
   public void initSingleSource(Vertex s) {
     for (Vertex vertex : vertices) {
-      if (vertex.equals(s)) {
-        s.discoveryTime = 0;
-      } else {
-        vertex.discoveryTime = Integer.MAX_VALUE;
-        vertex.p = null;
-      }
+      vertex.discoveryTime = Integer.MAX_VALUE;
+      vertex.p = null;
     }
+    s.discoveryTime = 0;
   }
 
   public static void main(String[] args) {
@@ -274,10 +273,10 @@ public class GraphImp implements Graph {
 
     GraphImp testGraph = new GraphImp(vertices, edges);
 
-    // System.out.println(testGraph.depthFirstSearch());
+    System.out.println(testGraph.depthFirstSearch());
     System.out.println(testGraph.topologicalSortDFS());
-    // System.out.println(testGraph.topologicalSortQueue());
-    System.out.println(testGraph.shortestPath(1, 5));
+    System.out.println(testGraph.topologicalSortQueue());
+    System.out.println(testGraph.shortestPath(1, 8));
   }
 
 }
