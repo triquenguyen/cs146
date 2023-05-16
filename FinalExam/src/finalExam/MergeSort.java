@@ -3,14 +3,16 @@ package finalExam;
 import java.util.Arrays;
 
 public class MergeSort {
-	
-	
-	
+
 	public static void mergeSort(int[] arr) {
-		
-		
+
+		for (int i = 1; i < arr.length; i *= 2) {
+			for (int j = 0; j < arr.length - i; j += 2 * i) {
+				merge(arr, j, i + j - 1, Math.min(2 * i + j - 1, arr.length - 1));
+			}
+		}
 	}
-	
+
 	static void merge(int[] arr, int start, int mid, int end) {
 		int leftSize = mid - start + 1;
 		int rightSize = end - mid;
@@ -42,6 +44,14 @@ public class MergeSort {
 			}
 		}
 	}
-	
+
+	public static void main(String[] args) {
+		int[] test = { 5, 4, 19, 122, 135, 1, 6, 1231, 12, 21, 0 };
+		mergeSort(test);
+
+		for (int i : test) {
+			System.out.print(i + " ");
+		}
+	}
 
 }

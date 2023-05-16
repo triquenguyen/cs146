@@ -20,7 +20,10 @@ public class BinaryTree {
 	Node root;
 	
 	public BinaryTree(int[] preOrder) {
-		
+		Node curr = root;
+		curr.value = preOrder[0];
+		int numOfChild = 0;
+
 	}
 		
 	/* String representation of the tree
@@ -50,5 +53,7 @@ public class BinaryTree {
 		}	
 	}
 	
-	
+	public static void main(String[] args) {
+		
+	}
 }
