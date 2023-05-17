@@ -189,20 +189,28 @@ public class Graph {
 
     public ArrayList<Integer> shortestPathBF(int source, int target) throws PathException {
         Vertex sourceVertex = findVertex(source);
+        Vertex targetVertex = findVertex(target);
+        ArrayList<Integer> result = new ArrayList<>();
+
         initSingleSource(sourceVertex);
 
-        ArrayList<Integer> result = new ArrayList<>();
-        Vertex targetVertex = findVertex(target);
-
         for (int i = 1; i < getVertices().size(); i++) {
-            for (Edge edge : getEdges()) {
-                relax(edge.from, edge.to, edge.weight);
+            for (Vertex vertex : getVertices()) {
+                Vertex u = vertex;
+                for (Edge edge : graph.get(u)) {
+                    Vertex v = edge.to;
+                    relax(u, v, edge.weight);
+                }
             }
         }
 
-        for (Edge edge : getEdges()) {
-            if (edge.to.discoveryTime > edge.from.discoveryTime + edge.weight) {
-                throw new PathException("Negative weight cycle occurs");
+        for (Vertex vertex : getVertices()) {
+            Vertex u = vertex;
+            for (Edge edge : graph.get(u)) {
+                Vertex v = edge.to;
+                if (v.discoveryTime > u.discoveryTime + edge.weight) {
+                    throw new PathException("Negative cycle occurs");
+                }
             }
         }
 
@@ -312,8 +320,10 @@ public class Graph {
 
         Graph testGraph = new Graph(vertices, edges);
 
+        System.out.println(testGraph.shortestPathBF(1, 5));
 
-        System.out.println(testGraph.shortestPathBF(1, 4));
-    }
-
+        // testGraph.unDirectedGraph();
+        // Graph mst = testGraph.primsMST();
+        // System.out.println(mst.graph.values());
+    }         
 }
