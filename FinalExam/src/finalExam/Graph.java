@@ -146,8 +146,9 @@ public class Graph {
         Vertex minVertex = Collections.min(getVertices());
         minVertex.discoveryTime = 0;
 
-        Comparator<Vertex> compareDiscoveryTime = (Vertex v1, Vertex v2) -> v1.discoveryTime - v2.discoveryTime;
+        Comparator<Vertex> compareDiscoveryTime = Comparator.comparing((Vertex v) -> v.discoveryTime);
         PriorityQueue<Vertex> queue = new PriorityQueue<>(compareDiscoveryTime);
+
         Set<Vertex> visited = new HashSet<>();
         Set<Edge> visitedEdge = new HashSet<>();
 
@@ -155,7 +156,7 @@ public class Graph {
             queue.offer(vertex);
         }
 
-        while (!visited.contains(minVertex)) {
+        while (queue.size() != 0) {
             Vertex u = extractMin(queue, visited);
 
             for (Edge edge : graph.get(u)) {
@@ -169,19 +170,18 @@ public class Graph {
                     }
                 }
             }
-
             visited.add(u);
         }
 
         // stand in so the code compiles
-        return new Graph(getVertices(), visitedEdge);
+        return new Graph(visited, visitedEdge);
     }
 
     public Vertex extractMin(PriorityQueue<Vertex> queue, Set<Vertex> visited) {
         Vertex minDistVertex = null;
 
         if (!visited.contains(queue.peek())) {
-            minDistVertex = queue.peek();
+            minDistVertex = queue.poll();
         }
 
         return minDistVertex;
@@ -247,6 +247,51 @@ public class Graph {
     }
 
     public static void main(String[] args) throws PathException {
+        TreeSet<Vertex> vertices = new TreeSet<>();
+        Vertex vertex1 = new Vertex(1);
+        Vertex vertex2 = new Vertex(2);
+        Vertex vertex3 = new Vertex(3);
+        Vertex vertex4 = new Vertex(4);
+        Vertex vertex5 = new Vertex(5);
+        Vertex vertex6 = new Vertex(6);
+        Vertex vertex7 = new Vertex(7);
+        Vertex vertex8 = new Vertex(8);
+        Vertex vertex9 = new Vertex(9);
+
+        vertices.add(vertex1);
+        vertices.add(vertex2);
+        vertices.add(vertex3);
+        vertices.add(vertex4);
+        vertices.add(vertex5);
+        vertices.add(vertex6);
+        vertices.add(vertex7);
+        vertices.add(vertex8);
+        vertices.add(vertex9);
+
+        ArrayList<Edge> edges = new ArrayList<>();
+        edges.add(new Edge(vertex1, vertex2, 4));
+        edges.add(new Edge(vertex2, vertex3, 8));
+        edges.add(new Edge(vertex3, vertex4, 7));
+        edges.add(new Edge(vertex4, vertex5, 9));
+        edges.add(new Edge(vertex5, vertex6, 10));
+        edges.add(new Edge(vertex6, vertex7, 2));
+        edges.add(new Edge(vertex7, vertex8, 1));
+        edges.add(new Edge(vertex8, vertex9, 7));
+        edges.add(new Edge(vertex1, vertex8, 8));
+        edges.add(new Edge(vertex2, vertex8, 11));
+        edges.add(new Edge(vertex3, vertex9, 2));
+        edges.add(new Edge(vertex3, vertex6, 4));
+        edges.add(new Edge(vertex7, vertex9, 6));
+        edges.add(new Edge(vertex4, vertex6, 14));
+
+        Graph testGraph = new Graph(vertices, edges);
+        testGraph.unDirectedGraph();
+
+        Graph testMST = testGraph.primsMST();
+
+        System.out.println(testMST.getVertices());
+        System.out.println(testMST.getEdges());
+
         // TreeSet<Vertex> vertices = new TreeSet<>();
         // Vertex vertex1 = new Vertex(1);
         // Vertex vertex2 = new Vertex(2);
@@ -268,62 +313,25 @@ public class Graph {
 
         // ArrayList<Edge> edges = new ArrayList<>();
         // edges.add(new Edge(vertex1, vertex2, 0));
-        // edges.add(new Edge(vertex6, vertex8, 2));
-        // edges.add(new Edge(vertex3, vertex2, 1));
-        // edges.add(new Edge(vertex4, vertex6, 3));
-        // edges.add(new Edge(vertex5, vertex8, 4));
-        // edges.add(new Edge(vertex5, vertex4, 1));
+        // edges.add(new Edge(vertex2, vertex3, 0));
+        // edges.add(new Edge(vertex3, vertex4, 2));
+        // edges.add(new Edge(vertex2, vertex6, 3));
+        // edges.add(new Edge(vertex1, vertex6, 4));
+        // edges.add(new Edge(vertex1, vertex7, 3));
+        // edges.add(new Edge(vertex6, vertex8, 3));
+        // edges.add(new Edge(vertex7, vertex8, 3));
+        // edges.add(new Edge(vertex5, vertex4, 3));
+        // edges.add(new Edge(vertex8, vertex5, 3));
+        // edges.add(new Edge(vertex7, vertex6, 3));
         // edges.add(new Edge(vertex6, vertex3, 3));
-        // edges.add(new Edge(vertex6, vertex7, 3));
+        // edges.add(new Edge(vertex6, vertex4, 3));
 
         // Graph testGraph = new Graph(vertices, edges);
-        // testGraph.unDirectedGraph();
 
-        // Graph testMST = testGraph.primsMST();
-
-        // System.out.println(testGraph.getVertices());
-        // System.out.println(testGraph.getEdges());
-
-        TreeSet<Vertex> vertices = new TreeSet<>();
-        Vertex vertex1 = new Vertex(1);
-        Vertex vertex2 = new Vertex(2);
-        Vertex vertex3 = new Vertex(3);
-        Vertex vertex4 = new Vertex(4);
-        Vertex vertex5 = new Vertex(5);
-        Vertex vertex6 = new Vertex(6);
-        Vertex vertex7 = new Vertex(7);
-        Vertex vertex8 = new Vertex(8);
-
-        vertices.add(vertex1);
-        vertices.add(vertex2);
-        vertices.add(vertex3);
-        vertices.add(vertex4);
-        vertices.add(vertex5);
-        vertices.add(vertex6);
-        vertices.add(vertex7);
-        vertices.add(vertex8);
-
-        ArrayList<Edge> edges = new ArrayList<>();
-        edges.add(new Edge(vertex1, vertex2, 0));
-        edges.add(new Edge(vertex2, vertex3, 0));
-        edges.add(new Edge(vertex3, vertex4, 2));
-        edges.add(new Edge(vertex2, vertex6, 3));
-        edges.add(new Edge(vertex1, vertex6, 4));
-        edges.add(new Edge(vertex1, vertex7, 3));
-        edges.add(new Edge(vertex6, vertex8, 3));
-        edges.add(new Edge(vertex7, vertex8, 3));
-        edges.add(new Edge(vertex5, vertex4, 3));
-        edges.add(new Edge(vertex8, vertex5, 3));
-        edges.add(new Edge(vertex7, vertex6, 3));
-        edges.add(new Edge(vertex6, vertex3, 3));
-        edges.add(new Edge(vertex6, vertex4, 3));
-
-        Graph testGraph = new Graph(vertices, edges);
-
-        System.out.println(testGraph.shortestPathBF(1, 5));
+        // System.out.println(testGraph.shortestPathBF(1, 5));
 
         // testGraph.unDirectedGraph();
         // Graph mst = testGraph.primsMST();
         // System.out.println(mst.graph.values());
-    }         
+    }
 }
