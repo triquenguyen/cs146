@@ -146,9 +146,10 @@ public class Graph {
         Vertex minVertex = Collections.min(getVertices());
         minVertex.discoveryTime = 0;
 
+        // Comparator<Vertex> compareDiscoveryTime = (Vertex v1, Vertex v2) ->
+        // v1.discoveryTime - v2.discoveryTime;
         Comparator<Vertex> compareDiscoveryTime = Comparator.comparing((Vertex v) -> v.discoveryTime);
         PriorityQueue<Vertex> queue = new PriorityQueue<>(compareDiscoveryTime);
-
         Set<Vertex> visited = new HashSet<>();
         Set<Edge> visitedEdge = new HashSet<>();
 
@@ -156,7 +157,7 @@ public class Graph {
             queue.offer(vertex);
         }
 
-        while (queue.size() != 0) {
+        while (visited.size() != graph.keySet().size()) {
             Vertex u = extractMin(queue, visited);
 
             for (Edge edge : graph.get(u)) {
@@ -166,11 +167,24 @@ public class Graph {
                     if (queue.contains(v) && v.discoveryTime > edge.weight) {
                         v.p = u;
                         v.discoveryTime = edge.weight;
-                        visitedEdge.add(edge);
+                        queue.remove(v);
+                        queue.offer(v);
                     }
                 }
             }
             visited.add(u);
+        }
+
+        for (Vertex vertex : getVertices()) {
+            Vertex u = vertex;
+            if (u.p != null) {
+                for (Edge edge : graph.get(u)) {
+                    if (edge.to.equals(u.p)) {
+                        visitedEdge.add(edge);
+                    }
+                }
+            }
+
         }
 
         // stand in so the code compiles
@@ -178,13 +192,14 @@ public class Graph {
     }
 
     public Vertex extractMin(PriorityQueue<Vertex> queue, Set<Vertex> visited) {
-        Vertex minDistVertex = null;
-
-        if (!visited.contains(queue.peek())) {
-            minDistVertex = queue.poll();
+        while (!queue.isEmpty()) {
+            Vertex minVertex = queue.poll();
+            if (!visited.contains(minVertex)) {
+                return minVertex;
+            }
         }
 
-        return minDistVertex;
+        return null;
     }
 
     public ArrayList<Integer> shortestPathBF(int source, int target) throws PathException {
@@ -277,17 +292,16 @@ public class Graph {
         edges.add(new Edge(vertex6, vertex7, 2));
         edges.add(new Edge(vertex7, vertex8, 1));
         edges.add(new Edge(vertex8, vertex9, 7));
-        edges.add(new Edge(vertex1, vertex8, 8));
-        edges.add(new Edge(vertex2, vertex8, 11));
-        edges.add(new Edge(vertex3, vertex9, 2));
-        edges.add(new Edge(vertex3, vertex6, 4));
-        edges.add(new Edge(vertex7, vertex9, 6));
-        edges.add(new Edge(vertex4, vertex6, 14));
+        edges.add(new Edge(vertex8, vertex1, 8));
+        edges.add(new Edge(vertex8, vertex2, 11));
+        edges.add(new Edge(vertex9, vertex3, 2));
+        edges.add(new Edge(vertex6, vertex3, 4));
+        edges.add(new Edge(vertex9, vertex7, 6));
+        edges.add(new Edge(vertex6, vertex4, 14));
 
         Graph testGraph = new Graph(vertices, edges);
-        testGraph.unDirectedGraph();
-
-        Graph testMST = testGraph.primsMST();
+        Graph undirectedGraph = testGraph.unDirectedGraph();
+        Graph testMST = undirectedGraph.primsMST();
 
         System.out.println(testMST.getVertices());
         System.out.println(testMST.getEdges());
@@ -328,10 +342,6 @@ public class Graph {
 
         // Graph testGraph = new Graph(vertices, edges);
 
-        // System.out.println(testGraph.shortestPathBF(1, 5));
-
-        // testGraph.unDirectedGraph();
-        // Graph mst = testGraph.primsMST();
-        // System.out.println(mst.graph.values());
+        // System.out.println(testGraph.shortestPathBF(1, 4));
     }
 }

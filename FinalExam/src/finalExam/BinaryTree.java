@@ -19,12 +19,12 @@ public class BinaryTree {
 	Node root;
 
 	public BinaryTree(int[] preOrder) {
-		root = createBinaryTree(preOrder, 0, preOrder.length - 1, 0);
+		root = createBinaryTree(preOrder, 0, 0, preOrder.length - 1);
 	}
 
-	public Node createBinaryTree(int[] preOrder, int startIndex, int endIndex, int currIndex) {
+	public Node createBinaryTree(int[] preOrder, int currIndex, int startIndex, int endIndex) {
 
-		if (startIndex > endIndex) {
+		if (startIndex > endIndex || currIndex >= preOrder.length) {
 			return null;
 		}
 
@@ -41,8 +41,8 @@ public class BinaryTree {
 			}
 		}
 
-		currNode.left = createBinaryTree(preOrder, startIndex, rootIndex - 1, currIndex + 1);
-		currNode.right = createBinaryTree(preOrder, rootIndex + 1, endIndex, currIndex + rootIndex - startIndex + 1);
+		currNode.left = createBinaryTree(preOrder, currIndex + 1, startIndex, rootIndex - 1);
+		currNode.right = createBinaryTree(preOrder, currIndex + rootIndex - startIndex + 1, rootIndex + 1, endIndex);
 
 		return currNode;
 	}
