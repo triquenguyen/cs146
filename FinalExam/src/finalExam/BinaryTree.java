@@ -19,30 +19,23 @@ public class BinaryTree {
 	Node root;
 
 	public BinaryTree(int[] preOrder) {
-		root = createBinaryTree(preOrder, 0, 0, preOrder.length - 1);
+		root = null;
+
+		for (int i : preOrder) {
+			root = createBinaryTree(root, i);
+		}
 	}
 
-	public Node createBinaryTree(int[] preOrder, int currIndex, int startIndex, int endIndex) {
-
-		if (startIndex > endIndex || currIndex >= preOrder.length) {
-			return null;
+	public Node createBinaryTree(Node currNode, int value) {
+		if (currNode == null) {
+			return new Node(value);
 		}
 
-		Node currNode = new Node(preOrder[currIndex]);
-
-		if (startIndex == endIndex) {
-			return currNode;
+		if (value < currNode.value) {
+			currNode.left = createBinaryTree(currNode.left, value);
+		} else if (value > currNode.value) {
+			currNode.right = createBinaryTree(currNode.right, value);
 		}
-
-		int rootIndex = 0;
-		for (int i = startIndex; i <= endIndex; i++) {
-			if (currNode.value == preOrder[i]) {
-				rootIndex = i;
-			}
-		}
-
-		currNode.left = createBinaryTree(preOrder, currIndex + 1, startIndex, rootIndex - 1);
-		currNode.right = createBinaryTree(preOrder, currIndex + rootIndex - startIndex + 1, rootIndex + 1, endIndex);
 
 		return currNode;
 	}
@@ -77,7 +70,7 @@ public class BinaryTree {
 	}
 
 	public static void main(String[] args) {
-		int[] preOrderArr = { 7, 3, 1, 5, 10, 8, 12 };
+		int[] preOrderArr = { 1, 0, 2 };
 
 		BinaryTree testTree = new BinaryTree(preOrderArr);
 
