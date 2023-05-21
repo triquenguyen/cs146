@@ -97,7 +97,6 @@ public class Graph {
             for (Edge e : graph.get(v)) {
                 allEdges.add(new Edge(e.from, e.to, e.weight));
                 allEdges.add(new Edge(e.to, e.from, e.weight));
-
             }
         }
 
@@ -137,6 +136,10 @@ public class Graph {
         return s;
     }
 
+    // Compared to the original algorithm, I use "visited.size() != graph.keySet().size()" as the condition 
+    // for the while loop. It means that if every node is visited, we also have found the minimum path 
+    // for the MST. Additionally, I created a function addMinimumEdge to add the minimumEdge that creates 
+    // an MST. Thats mostly all the changes I made compared to the original pseudocode.
     public Graph primsMST() {
         Comparator<Vertex> compareDiscoveryTime = Comparator.comparing((Vertex v) -> v.discoveryTime);
         PriorityQueue<Vertex> queue = new PriorityQueue<>(compareDiscoveryTime);
@@ -155,7 +158,6 @@ public class Graph {
 
         Graph MSTGraph = new Graph(getVertices(), new HashSet<>());
         Set<Vertex> visited = new HashSet<>();
-        Set<Edge> visitedEdge = new HashSet<>();
 
         while (visited.size() != graph.keySet().size()) {
             Vertex u = extractMin(queue, visited);
@@ -166,15 +168,13 @@ public class Graph {
             }
 
             for (Edge edge : graph.get(u)) {
-                if (!visitedEdge.contains(edge)) {
-                    Vertex v = edge.to;
+                Vertex v = edge.to;
 
-                    if (queue.contains(v) && v.discoveryTime > edge.weight) {
-                        v.p = u;
-                        v.discoveryTime = edge.weight;
-                        queue.remove(v);
-                        queue.offer(v);
-                    }
+                if (queue.contains(v) && v.discoveryTime > edge.weight) {
+                    v.p = u;
+                    v.discoveryTime = edge.weight;
+                    queue.remove(v);
+                    queue.offer(v);
                 }
             }
             visited.add(u);
@@ -203,11 +203,14 @@ public class Graph {
         } else {
             edges = new ArrayList<>();
         }
-        
+
         edges.add(edge);
         graph.put(from, edges);
     }
 
+    // A negative cycle would occur when we check the sum  of from vertex's discoveryTime and 
+    // the edge weight less than the to vertex discoverytime of that edge, if this happens 
+    // then we throw the PathException.
     public ArrayList<Integer> shortestPathBF(int source, int target) throws PathException {
         Vertex sourceVertex = findVertex(source);
         Vertex targetVertex = findVertex(target);
@@ -222,7 +225,8 @@ public class Graph {
         }
 
         for (Edge edge : getEdges()) {
-            if (edge.from.discoveryTime != Integer.MAX_VALUE && edge.from.discoveryTime + edge.weight < edge.to.discoveryTime) {
+            if (edge.from.discoveryTime != Integer.MAX_VALUE
+                    && edge.from.discoveryTime + edge.weight < edge.to.discoveryTime) {
                 throw new PathException("Negative cycle occurs");
             }
         }
@@ -261,51 +265,6 @@ public class Graph {
 
     public static void main(String[] args) throws PathException {
         // Test MST
-        // TreeSet<Vertex> vertices = new TreeSet<>();
-        // Vertex vertex1 = new Vertex(1);
-        // Vertex vertex2 = new Vertex(2);
-        // Vertex vertex3 = new Vertex(3);
-        // Vertex vertex4 = new Vertex(4);
-        // Vertex vertex5 = new Vertex(5);
-        // Vertex vertex6 = new Vertex(6);
-        // Vertex vertex7 = new Vertex(7);
-        // Vertex vertex8 = new Vertex(8);
-        // Vertex vertex9 = new Vertex(9);
-
-        // vertices.add(vertex1);
-        // vertices.add(vertex2);
-        // vertices.add(vertex3);
-        // vertices.add(vertex4);
-        // vertices.add(vertex5);
-        // vertices.add(vertex6);
-        // vertices.add(vertex7);
-        // vertices.add(vertex8);
-        // vertices.add(vertex9);
-
-        // ArrayList<Edge> edges = new ArrayList<>();
-        // edges.add(new Edge(vertex1, vertex2, 4));
-        // edges.add(new Edge(vertex2, vertex3, 8));
-        // edges.add(new Edge(vertex3, vertex4, 7));
-        // edges.add(new Edge(vertex4, vertex5, 9));
-        // edges.add(new Edge(vertex5, vertex6, 10));
-        // edges.add(new Edge(vertex6, vertex7, 2));
-        // edges.add(new Edge(vertex7, vertex8, 1));
-        // edges.add(new Edge(vertex8, vertex9, 7));
-        // edges.add(new Edge(vertex8, vertex1, 8));
-        // edges.add(new Edge(vertex8, vertex2, 11));
-        // edges.add(new Edge(vertex9, vertex3, 2));
-        // edges.add(new Edge(vertex6, vertex3, 4));
-        // edges.add(new Edge(vertex9, vertex7, 6));
-        // edges.add(new Edge(vertex6, vertex4, 14));
-
-        // Graph testGraph = new Graph(vertices, edges);
-        // Graph undirectedGraph = testGraph.unDirectedGraph();
-        // Graph testMST = undirectedGraph.primsMST();
-
-        // System.out.println(testMST.getVertices());
-        // System.out.println(testMST.getEdges());
-
-        //Test Shortest Path
         TreeSet<Vertex> vertices = new TreeSet<>();
         Vertex vertex1 = new Vertex(1);
         Vertex vertex2 = new Vertex(2);
@@ -315,6 +274,7 @@ public class Graph {
         Vertex vertex6 = new Vertex(6);
         Vertex vertex7 = new Vertex(7);
         Vertex vertex8 = new Vertex(8);
+        Vertex vertex9 = new Vertex(9);
 
         vertices.add(vertex1);
         vertices.add(vertex2);
@@ -324,24 +284,67 @@ public class Graph {
         vertices.add(vertex6);
         vertices.add(vertex7);
         vertices.add(vertex8);
+        vertices.add(vertex9);
 
         ArrayList<Edge> edges = new ArrayList<>();
-        edges.add(new Edge(vertex1, vertex2, 0));
-        edges.add(new Edge(vertex2, vertex3, 0));
-        edges.add(new Edge(vertex3, vertex4, 2));
-        edges.add(new Edge(vertex2, vertex6, 3));
-        edges.add(new Edge(vertex1, vertex6, 4));
-        edges.add(new Edge(vertex1, vertex7, 3));
-        edges.add(new Edge(vertex6, vertex8, 3));
-        edges.add(new Edge(vertex7, vertex8, 3));
-        edges.add(new Edge(vertex5, vertex4, 3));
-        edges.add(new Edge(vertex8, vertex5, 3));
-        edges.add(new Edge(vertex7, vertex6, 3));
-        edges.add(new Edge(vertex6, vertex3, 3));
-        edges.add(new Edge(vertex6, vertex4, 3));
+        edges.add(new Edge(vertex1, vertex2, 4));
+        edges.add(new Edge(vertex2, vertex3, 8));
+        edges.add(new Edge(vertex3, vertex4, 7));
+        edges.add(new Edge(vertex4, vertex5, 9));
+        edges.add(new Edge(vertex5, vertex6, 10));
+        edges.add(new Edge(vertex6, vertex7, 2));
+        edges.add(new Edge(vertex7, vertex8, 1));
+        edges.add(new Edge(vertex8, vertex9, 7));
+        edges.add(new Edge(vertex8, vertex1, 8));
+        edges.add(new Edge(vertex8, vertex2, 11));
+        edges.add(new Edge(vertex9, vertex3, 2));
+        edges.add(new Edge(vertex6, vertex3, 4));
+        edges.add(new Edge(vertex9, vertex7, 6));
+        edges.add(new Edge(vertex6, vertex4, 14));
 
         Graph testGraph = new Graph(vertices, edges);
+        Graph undirectedGraph = testGraph.unDirectedGraph();
+        Graph testMST = undirectedGraph.primsMST();
 
-        System.out.println(testGraph.shortestPathBF(1, 4));
+        System.out.println(testMST);
+
+        // Test Shortest Path
+        // TreeSet<Vertex> vertices = new TreeSet<>();
+        // Vertex vertex1 = new Vertex(1);
+        // Vertex vertex2 = new Vertex(2);
+        // Vertex vertex3 = new Vertex(3);
+        // Vertex vertex4 = new Vertex(4);
+        // Vertex vertex5 = new Vertex(5);
+        // Vertex vertex6 = new Vertex(6);
+        // Vertex vertex7 = new Vertex(7);
+        // Vertex vertex8 = new Vertex(8);
+
+        // vertices.add(vertex1);
+        // vertices.add(vertex2);
+        // vertices.add(vertex3);
+        // vertices.add(vertex4);
+        // vertices.add(vertex5);
+        // vertices.add(vertex6);
+        // vertices.add(vertex7);
+        // vertices.add(vertex8);
+
+        // ArrayList<Edge> edges = new ArrayList<>();
+        // edges.add(new Edge(vertex1, vertex2, 0));
+        // edges.add(new Edge(vertex2, vertex3, 0));
+        // edges.add(new Edge(vertex3, vertex4, 2));
+        // edges.add(new Edge(vertex2, vertex6, 3));
+        // edges.add(new Edge(vertex1, vertex6, 4));
+        // edges.add(new Edge(vertex1, vertex7, 3));
+        // edges.add(new Edge(vertex6, vertex8, 3));
+        // edges.add(new Edge(vertex7, vertex8, 3));
+        // edges.add(new Edge(vertex5, vertex4, 3));
+        // edges.add(new Edge(vertex8, vertex5, 3));
+        // edges.add(new Edge(vertex7, vertex6, 3));
+        // edges.add(new Edge(vertex6, vertex3, 3));
+        // edges.add(new Edge(vertex6, vertex4, 3));
+
+        // Graph testGraph = new Graph(vertices, edges);
+
+        // System.out.println(testGraph.shortestPathBF(1, 4));
     }
 }
